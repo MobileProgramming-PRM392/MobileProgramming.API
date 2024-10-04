@@ -1,0 +1,38 @@
+[2024/10/04 16:34:00] [INF] Executed DbCommand (19ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+[2024/10/04 16:34:00] [INF] Executed DbCommand (14ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
+[2024/10/04 16:34:00] [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+[2024/10/04 16:34:00] [INF] Executed DbCommand (13ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [__EFMigrationsHistory] (
+    [MigrationId] nvarchar(150) NOT NULL,
+    [ProductVersion] nvarchar(32) NOT NULL,
+    CONSTRAINT [PK___EFMigrationsHistory] PRIMARY KEY ([MigrationId])
+);
+[2024/10/04 16:34:00] [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+[2024/10/04 16:34:00] [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
+[2024/10/04 16:34:00] [INF] Executed DbCommand (15ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [MigrationId], [ProductVersion]
+FROM [__EFMigrationsHistory]
+ORDER BY [MigrationId];
+[2024/10/04 16:34:00] [INF] Applying migration '20241004093114_c2'.
+[2024/10/04 16:34:00] [INF] Executed DbCommand (8ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [Products] (
+    [ProductID] int NOT NULL IDENTITY,
+    [ProductName] nvarchar(255) NULL,
+    [ProductDescription] text NULL,
+    [ProductImage] nvarchar(255) NULL,
+    [Price] decimal(10,2) NOT NULL,
+    [Category] nvarchar(100) NULL,
+    [Brand] nvarchar(100) NULL,
+    [Rating] decimal(3,2) NULL,
+    [CreatedAt] bigint NOT NULL,
+    [UpdateAt] bigint NOT NULL,
+    CONSTRAINT [PK_Products] PRIMARY KEY ([ProductID])
+);
+[2024/10/04 16:34:00] [INF] Executed DbCommand (5ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+VALUES (N'20241004093114_c2', N'8.0.0');

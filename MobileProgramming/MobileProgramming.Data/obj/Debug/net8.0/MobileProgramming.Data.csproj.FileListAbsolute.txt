@@ -1,0 +1,14 @@
+C:\Users\ACER\Desktop\CODE\SEMESTER_8\PRM392\MobileProgramming\MobileProgramming.Data\obj\Debug\net8.0\MobileProgramming.Data.csproj.AssemblyReference.cache
+C:\Users\ACER\Desktop\CODE\SEMESTER_8\PRM392\MobileProgramming\MobileProgramming.Data\obj\Debug\net8.0\MobileProgramming.Data.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\ACER\Desktop\CODE\SEMESTER_8\PRM392\MobileProgramming\MobileProgramming.Data\obj\Debug\net8.0\MobileProgramming.Data.AssemblyInfoInputs.cache
+C:\Users\ACER\Desktop\CODE\SEMESTER_8\PRM392\MobileProgramming\MobileProgramming.Data\obj\Debug\net8.0\MobileProgramming.Data.AssemblyInfo.cs
+C:\Users\ACER\Desktop\CODE\SEMESTER_8\PRM392\MobileProgramming\MobileProgramming.Data\obj\Debug\net8.0\MobileProgramming.Data.csproj.CoreCompileInputs.cache
+C:\Users\ACER\Desktop\CODE\SEMESTER_8\PRM392\MobileProgramming\MobileProgramming.Data\bin\Debug\net8.0\MobileProgramming.Data.deps.json
+C:\Users\ACER\Desktop\CODE\SEMESTER_8\PRM392\MobileProgramming\MobileProgramming.Data\bin\Debug\net8.0\MobileProgramming.Data.runtimeconfig.json
+C:\Users\ACER\Desktop\CODE\SEMESTER_8\PRM392\MobileProgramming\MobileProgramming.Data\bin\Debug\net8.0\MobileProgramming.Data.dll
+C:\Users\ACER\Desktop\CODE\SEMESTER_8\PRM392\MobileProgramming\MobileProgramming.Data\bin\Debug\net8.0\MobileProgramming.Data.pdb
+C:\Users\ACER\Desktop\CODE\SEMESTER_8\PRM392\MobileProgramming\MobileProgramming.Data\obj\Debug\net8.0\MobileProgramming.Data.dll
+C:\Users\ACER\Desktop\CODE\SEMESTER_8\PRM392\MobileProgramming\MobileProgramming.Data\obj\Debug\net8.0\refint\MobileProgramming.Data.dll
+C:\Users\ACER\Desktop\CODE\SEMESTER_8\PRM392\MobileProgramming\MobileProgramming.Data\obj\Debug\net8.0\MobileProgramming.Data.pdb
+C:\Users\ACER\Desktop\CODE\SEMESTER_8\PRM392\MobileProgramming\MobileProgramming.Data\obj\Debug\net8.0\MobileProgramming.Data.genruntimeconfig.cache
+C:\Users\ACER\Desktop\CODE\SEMESTER_8\PRM392\MobileProgramming\MobileProgramming.Data\obj\Debug\net8.0\ref\MobileProgramming.Data.dll
