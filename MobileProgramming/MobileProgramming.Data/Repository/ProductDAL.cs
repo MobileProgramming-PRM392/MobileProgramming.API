@@ -13,9 +13,9 @@ namespace MobileProgramming.Data.Repository
 {
     public class ProductDAL : RepositoryBase<Product>, IProductRepository
     {
-        private readonly ApplicationDbContext _context;
+        private readonly SaleProductDbContext _context;
 
-        public ProductDAL(ApplicationDbContext context) : base(context)
+        public ProductDAL(SaleProductDbContext context) : base(context)
         {
             _context = context;
         }

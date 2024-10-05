@@ -6,9 +6,9 @@ namespace MobileProgramming.Data.Generic
 {
     public class RepositoryBase<TDomain> : IRepository<TDomain> where TDomain : class
     {
-        private readonly ApplicationDbContext _context;
+        private readonly SaleProductDbContext _context;
 
-        public RepositoryBase(ApplicationDbContext context)
+        public RepositoryBase(SaleProductDbContext context)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }

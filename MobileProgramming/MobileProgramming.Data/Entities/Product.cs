@@ -1,24 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace MobileProgramming.Data.Entities
+namespace MobileProgramming.Data.Entities;
+
+public partial class Product
 {
-    public class Product
-    {
-        public int ProductID { get; set; }
-        public string? ProductName { get; set; }
-        public string? ProductDescription { get; set; }
-        public string? ProductImage { get; set; }       
-        public decimal Price { get; set; }
-        public string? Category { get; set; }
-        public string? Brand { get; set; }
-        public decimal? Rating { get; set; } 
-        public long CreatedAt { get; set; }
-        public long UpdateAt { get; set; }
-    }
+    public int ProductId { get; set; }
+
+    public string ProductName { get; set; } = null!;
+
+    public string? BriefDescription { get; set; }
+
+    public string? FullDescription { get; set; }
+
+    public string? TechnicalSpecifications { get; set; }
+
+    public decimal Price { get; set; }
+
+    public string? ImageUrl { get; set; }
+
+    public int? CategoryId { get; set; }
+
+    public virtual ICollection<CartItem> CartItems { get; set; } = new List<CartItem>();
+
+    public virtual Category? Category { get; set; }
 }

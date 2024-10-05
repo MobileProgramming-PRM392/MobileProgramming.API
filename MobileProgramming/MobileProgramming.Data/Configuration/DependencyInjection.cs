@@ -20,15 +20,17 @@ namespace MobileProgramming.Data.Configuration
             services.Configure<RedisSetting>(configuration.GetSection("Redis"));
 
             //Add DBcontext
-            services.AddDbContext<ApplicationDbContext>((sp, options) =>
+            services.AddDbContext<SaleProductDbContext>((sp, options) =>
             {
                 options.UseSqlServer(
                     configuration.GetConnectionString("local"),
                     //configuration.GetConnectionString("production"),
                     b =>
                     {
-                        b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName);
+                        b.MigrationsAssembly(typeof(SaleProductDbContext).Assembly.FullName);
                         b.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
+
+                       
                     });
                 options.UseLazyLoadingProxies();
             });
@@ -55,7 +57,7 @@ namespace MobileProgramming.Data.Configuration
             new RedisDistributedSynchronizationProvider(redisDatabase!.GetDatabase()));
 
             services.AddSingleton<IRedisCaching, RedisCaching>();
-            services.AddScoped<IUnitOfWork>(provider => (IUnitOfWork)provider.GetRequiredService<ApplicationDbContext>());
+            services.AddScoped<IUnitOfWork>(provider => (IUnitOfWork)provider.GetRequiredService<SaleProductDbContext>());
 
             services.AddScoped<ProductDAL>();
             return services;
