@@ -1,0 +1,26 @@
+# Ignore build files
+/bin/
+/obj/
+/Debug/
+/Release/
+
+# Ignore Visual Studio project files
+*.user
+*.suo
+*.vspscc
+*.vssscc
+
+# Ignore log files and database
+*.log
+*.mdf
+*.ldf
+
+# Ignore any DLLs or EXE
+*.dll
+*.exe
+
+# Ignore appsettings.json
+appsettings.json
+
+# Ignore others
+.vscode/
