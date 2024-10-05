@@ -1,0 +1,13 @@
+version: '3.4'
+
+services:
+  mobileprogramming.api:
+    image: ${DOCKER_REGISTRY-}mobileprogrammingapi
+    build:
+      context: .
+      dockerfile: MobileProgramming/Dockerfile
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+        - "6379:6379"
