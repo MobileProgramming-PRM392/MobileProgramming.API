@@ -22,7 +22,7 @@ namespace MobileProgramming.API.Controllers
 
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpGet("")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
