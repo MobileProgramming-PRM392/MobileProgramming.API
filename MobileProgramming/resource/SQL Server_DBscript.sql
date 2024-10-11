@@ -114,3 +114,14 @@ CREATE TABLE StoreLocations (
     Address NVARCHAR(255) NOT NULL
 );
 GO
+
+
+-- Tạo bảng ProductImage
+CREATE TABLE ProductImages (
+    ImageID INT PRIMARY KEY IDENTITY(1,1),
+    ProductID INT,
+    ImageURL NVARCHAR(255) NOT NULL,
+    FOREIGN KEY (ProductID) REFERENCES Products(ProductID)
+);
+GO
+

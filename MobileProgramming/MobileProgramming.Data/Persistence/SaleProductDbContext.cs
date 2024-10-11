@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using MobileProgramming.Data.Entities;
 using MobileProgramming.Data.Interfaces.Common;
 
@@ -34,12 +33,13 @@ public partial class SaleProductDbContext : DbContext, IUnitOfWork
 
     public virtual DbSet<Product> Products { get; set; }
 
+    public virtual DbSet<ProductImage> ProductImages { get; set; }
+
     public virtual DbSet<StoreLocation> StoreLocations { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
 
-   
-
+    
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Cart>(entity =>
@@ -169,6 +169,21 @@ public partial class SaleProductDbContext : DbContext, IUnitOfWork
             entity.HasOne(d => d.Category).WithMany(p => p.Products)
                 .HasForeignKey(d => d.CategoryId)
                 .HasConstraintName("FK__Products__Catego__3B75D760");
+        });
+
+        modelBuilder.Entity<ProductImage>(entity =>
+        {
+            entity.HasKey(e => e.ImageId).HasName("PK__ProductI__7516F4ECB0986FCA");
+
+            entity.Property(e => e.ImageId).HasColumnName("ImageID");
+            entity.Property(e => e.ImageUrl)
+                .HasMaxLength(255)
+                .HasColumnName("ImageURL");
+            entity.Property(e => e.ProductId).HasColumnName("ProductID");
+
+            entity.HasOne(d => d.Product).WithMany(p => p.ProductImages)
+                .HasForeignKey(d => d.ProductId)
+                .HasConstraintName("FK__ProductIm__Produ__6FE99F9F");
         });
 
         modelBuilder.Entity<StoreLocation>(entity =>
