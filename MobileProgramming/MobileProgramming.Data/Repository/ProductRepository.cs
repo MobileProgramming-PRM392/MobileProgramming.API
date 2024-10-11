@@ -11,11 +11,11 @@ using System.Threading.Tasks;
 
 namespace MobileProgramming.Data.Repository
 {
-    public class ProductDAL : RepositoryBase<Product>, IProductRepository
+    public class ProductRepository : RepositoryBase<Product>, IProductRepository
     {
         private readonly SaleProductDbContext _context;
 
-        public ProductDAL(SaleProductDbContext context) : base(context)
+        public ProductRepository(SaleProductDbContext context) : base(context)
         {
             _context = context;
         }

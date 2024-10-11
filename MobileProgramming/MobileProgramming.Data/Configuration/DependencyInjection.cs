@@ -9,6 +9,7 @@ using MobileProgramming.Data.ExternalServices.Caching.Setting;
 using MobileProgramming.Data.ExternalServices.Caching;
 using MobileProgramming.Data.Interfaces.Common;
 using MobileProgramming.Data.Repository;
+using MobileProgramming.Data.Interfaces;
 
 
 namespace MobileProgramming.Data.Configuration
@@ -58,8 +59,9 @@ namespace MobileProgramming.Data.Configuration
 
             services.AddSingleton<IRedisCaching, RedisCaching>();
             services.AddScoped<IUnitOfWork>(provider => (IUnitOfWork)provider.GetRequiredService<SaleProductDbContext>());
+           
 
-            services.AddScoped<ProductDAL>();
+            services.AddScoped<IProductRepository, ProductRepository>();
             return services;
 
 
