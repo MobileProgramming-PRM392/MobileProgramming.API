@@ -33,7 +33,6 @@ CREATE TABLE Products (
     FullDescription NVARCHAR(MAX),
     TechnicalSpecifications NVARCHAR(MAX),
     Price DECIMAL(18, 2) NOT NULL,
-    ImageURL NVARCHAR(255),
     CategoryID INT,
     FOREIGN KEY (CategoryID) REFERENCES Categories(CategoryID)
 );

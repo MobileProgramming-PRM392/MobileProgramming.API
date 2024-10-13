@@ -1,8 +1,10 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using MobileProgramming.Business.Models.DTO.Product;
 using MobileProgramming.Data.Entities;
 using MobileProgramming.Data.Generic;
 using MobileProgramming.Data.Interfaces;
+using MobileProgramming.Data.Models;
 using MobileProgramming.Data.Models.Enum;
 using MobileProgramming.Data.Models.Product;
 using MobileProgramming.Data.Persistence;
@@ -56,6 +58,16 @@ namespace MobileProgramming.Data.Repository
                 
             }
             return query.ToList();
+        }
+
+        public async Task<Product?> GetProductDetail(int productId)
+        {
+            return await _context.Products.Include(p => p.ProductImages).Where(p => p.ProductId == productId).FirstOrDefaultAsync();
+        }
+
+        public async Task<List<Product>> GetProductsToDisplay()
+        {
+            return await _context.Products.Include(p => p.ProductImages).ToListAsync();
         }
 
         private IQueryable<Product> GetProductsByPopularity(IQueryable<Product> productsQuery)

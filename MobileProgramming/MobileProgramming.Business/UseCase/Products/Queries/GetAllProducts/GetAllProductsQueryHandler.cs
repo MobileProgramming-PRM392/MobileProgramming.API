@@ -28,7 +28,7 @@ namespace MobileProgramming.Business.UseCase.Products.Queries.GetAllProducts
         public async Task<APIResponse> Handle(GetAllProductsQuery request, CancellationToken cancellationToken)
         {
             var response = new APIResponse();
-            var result = await _productRepo.GetAll();
+            var result = await _productRepo.GetProductsToDisplay();
 
             var listProduct = _mapper.Map<IEnumerable<ProductDisplayDto>>(result);
             response.StatusResponse = HttpStatusCode.OK;

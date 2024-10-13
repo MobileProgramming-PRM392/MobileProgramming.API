@@ -44,7 +44,7 @@ public partial class SaleProductDbContext : DbContext, IUnitOfWork
     {
         modelBuilder.Entity<Cart>(entity =>
         {
-            entity.HasKey(e => e.CartId).HasName("PK__Carts__51BCD797AF0EB6D9");
+            entity.HasKey(e => e.CartId).HasName("PK__Carts__51BCD7972BA9AA6F");
 
             entity.Property(e => e.CartId).HasColumnName("CartID");
             entity.Property(e => e.Status).HasMaxLength(50);
@@ -58,7 +58,7 @@ public partial class SaleProductDbContext : DbContext, IUnitOfWork
 
         modelBuilder.Entity<CartItem>(entity =>
         {
-            entity.HasKey(e => e.CartItemId).HasName("PK__CartItem__488B0B2A20D20038");
+            entity.HasKey(e => e.CartItemId).HasName("PK__CartItem__488B0B2A0841267A");
 
             entity.Property(e => e.CartItemId).HasColumnName("CartItemID");
             entity.Property(e => e.CartId).HasColumnName("CartID");
@@ -76,7 +76,7 @@ public partial class SaleProductDbContext : DbContext, IUnitOfWork
 
         modelBuilder.Entity<Category>(entity =>
         {
-            entity.HasKey(e => e.CategoryId).HasName("PK__Categori__19093A2B451F69ED");
+            entity.HasKey(e => e.CategoryId).HasName("PK__Categori__19093A2BE7E6BDD5");
 
             entity.Property(e => e.CategoryId).HasColumnName("CategoryID");
             entity.Property(e => e.CategoryName).HasMaxLength(100);
@@ -84,7 +84,7 @@ public partial class SaleProductDbContext : DbContext, IUnitOfWork
 
         modelBuilder.Entity<ChatMessage>(entity =>
         {
-            entity.HasKey(e => e.ChatMessageId).HasName("PK__ChatMess__9AB610558F3B03C1");
+            entity.HasKey(e => e.ChatMessageId).HasName("PK__ChatMess__9AB6105565ECEFB9");
 
             entity.Property(e => e.ChatMessageId).HasColumnName("ChatMessageID");
             entity.Property(e => e.SentAt)
@@ -99,7 +99,7 @@ public partial class SaleProductDbContext : DbContext, IUnitOfWork
 
         modelBuilder.Entity<Notification>(entity =>
         {
-            entity.HasKey(e => e.NotificationId).HasName("PK__Notifica__20CF2E32C233E0E7");
+            entity.HasKey(e => e.NotificationId).HasName("PK__Notifica__20CF2E32E9FE1B74");
 
             entity.Property(e => e.NotificationId).HasColumnName("NotificationID");
             entity.Property(e => e.CreatedAt)
@@ -115,7 +115,7 @@ public partial class SaleProductDbContext : DbContext, IUnitOfWork
 
         modelBuilder.Entity<Order>(entity =>
         {
-            entity.HasKey(e => e.OrderId).HasName("PK__Orders__C3905BAFF6ECB321");
+            entity.HasKey(e => e.OrderId).HasName("PK__Orders__C3905BAF1A57B4FC");
 
             entity.Property(e => e.OrderId).HasColumnName("OrderID");
             entity.Property(e => e.BillingAddress).HasMaxLength(255);
@@ -138,7 +138,7 @@ public partial class SaleProductDbContext : DbContext, IUnitOfWork
 
         modelBuilder.Entity<Payment>(entity =>
         {
-            entity.HasKey(e => e.PaymentId).HasName("PK__Payments__9B556A589A66D997");
+            entity.HasKey(e => e.PaymentId).HasName("PK__Payments__9B556A588A70850E");
 
             entity.Property(e => e.PaymentId).HasColumnName("PaymentID");
             entity.Property(e => e.Amount).HasColumnType("decimal(18, 2)");
@@ -155,14 +155,11 @@ public partial class SaleProductDbContext : DbContext, IUnitOfWork
 
         modelBuilder.Entity<Product>(entity =>
         {
-            entity.HasKey(e => e.ProductId).HasName("PK__Products__B40CC6ED7B57FC3C");
+            entity.HasKey(e => e.ProductId).HasName("PK__Products__B40CC6EDE6AE9F33");
 
             entity.Property(e => e.ProductId).HasColumnName("ProductID");
             entity.Property(e => e.BriefDescription).HasMaxLength(255);
             entity.Property(e => e.CategoryId).HasColumnName("CategoryID");
-            entity.Property(e => e.ImageUrl)
-                .HasMaxLength(255)
-                .HasColumnName("ImageURL");
             entity.Property(e => e.Price).HasColumnType("decimal(18, 2)");
             entity.Property(e => e.ProductBrand).HasMaxLength(100);
             entity.Property(e => e.ProductName).HasMaxLength(100);
@@ -174,7 +171,7 @@ public partial class SaleProductDbContext : DbContext, IUnitOfWork
 
         modelBuilder.Entity<ProductImage>(entity =>
         {
-            entity.HasKey(e => e.ImageId).HasName("PK__ProductI__7516F4ECCAE479BB");
+            entity.HasKey(e => e.ImageId).HasName("PK__ProductI__7516F4EC30BA1E5E");
 
             entity.Property(e => e.ImageId).HasColumnName("ImageID");
             entity.Property(e => e.ImageUrl)
@@ -189,7 +186,7 @@ public partial class SaleProductDbContext : DbContext, IUnitOfWork
 
         modelBuilder.Entity<StoreLocation>(entity =>
         {
-            entity.HasKey(e => e.LocationId).HasName("PK__StoreLoc__E7FEA477D25B4797");
+            entity.HasKey(e => e.LocationId).HasName("PK__StoreLoc__E7FEA4772F39D708");
 
             entity.Property(e => e.LocationId).HasColumnName("LocationID");
             entity.Property(e => e.Address).HasMaxLength(255);
@@ -199,7 +196,7 @@ public partial class SaleProductDbContext : DbContext, IUnitOfWork
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.UserId).HasName("PK__Users__1788CCACAF78C24A");
+            entity.HasKey(e => e.UserId).HasName("PK__Users__1788CCAC12CE891A");
 
             entity.Property(e => e.UserId).HasColumnName("UserID");
             entity.Property(e => e.Address).HasMaxLength(255);

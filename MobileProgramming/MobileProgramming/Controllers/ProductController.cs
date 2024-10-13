@@ -7,6 +7,7 @@ using MobileProgramming.Business.Models.DTO.Product;
 using MobileProgramming.Business.Models.Response;
 using MobileProgramming.Business.UseCase.Products.Queries.GetAllProducts;
 using MobileProgramming.Business.UseCase.Products.Queries.GetFilteredProducts;
+using MobileProgramming.Business.UseCase.Products.Queries.GetProductDetail;
 using MobileProgramming.Data.Models.Product;
 using System.Net;
 
@@ -36,6 +37,15 @@ namespace MobileProgramming.API.Controllers
             return (result.StatusResponse != HttpStatusCode.OK) ? result : StatusCode((int)result.StatusResponse, result);
         }
 
+        [HttpGet("product-detail")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+
+        public async Task<ActionResult<APIResponse>> GetProductDetail([FromQuery] int productId, CancellationToken cancellationToken = default)
+        {
+            var result = await _mediator.Send(new GetProductDetailQuery(productId), cancellationToken);
+            return (result.StatusResponse != HttpStatusCode.OK) ? result : StatusCode((int)result.StatusResponse, result);
+        }
 
         [HttpGet("filter")]
         [ProducesResponseType(StatusCodes.Status200OK)]

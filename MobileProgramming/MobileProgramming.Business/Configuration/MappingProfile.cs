@@ -13,7 +13,13 @@ namespace MobileProgramming.Business.Configuration
     {
         public MappingProfile()
         {
-            CreateMap<ProductDisplayDto, Product>();
+            CreateMap<Product, ProductDisplayDto>()
+                .ForMember(dest => dest.ImageUrl, opt => opt.MapFrom(src =>
+                    src.ProductImages.FirstOrDefault().ImageUrl))
+                .ReverseMap();
+
+            CreateMap<ProductDetailDto, Product>() 
+                .ReverseMap();
         }
     }
 }
