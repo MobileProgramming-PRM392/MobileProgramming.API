@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace MobileProgramming.Business.Models
+namespace MobileProgramming.Business.Models.ResponseMessage
 {
     public class ErrorResponse
     {

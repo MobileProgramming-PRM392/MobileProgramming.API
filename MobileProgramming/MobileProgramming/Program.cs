@@ -56,7 +56,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseHttpsRedirection();
-
+app.UseSession();
 app.UseStaticFiles();
 
 app.MapControllers();

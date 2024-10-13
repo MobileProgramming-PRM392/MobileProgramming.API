@@ -51,7 +51,15 @@ namespace MobileProgramming.Data.Configuration
                 options.Configuration = redisConnection;
             });
            
+            //Add session
             services.AddDistributedMemoryCache();
+            services.AddSession(options =>
+            {
+                options.Cookie.Name = ".MobileProgramming.Session";
+                options.IdleTimeout = TimeSpan.FromDays(1);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
 
             //add distributed lock with redis in DI container
             services.AddSingleton<IDistributedLockProvider>(_ =>

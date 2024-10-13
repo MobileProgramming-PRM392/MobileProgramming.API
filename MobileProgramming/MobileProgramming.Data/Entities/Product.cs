@@ -9,6 +9,8 @@ public partial class Product
 
     public string ProductName { get; set; } = null!;
 
+    public string? ProductBrand { get; set; }
+
     public string? BriefDescription { get; set; }
 
     public string? FullDescription { get; set; }

@@ -28,6 +28,7 @@ GO
 CREATE TABLE Products (
     ProductID INT PRIMARY KEY IDENTITY(1,1),
     ProductName NVARCHAR(100) NOT NULL,
+	ProductBrand NVARCHAR(100),
     BriefDescription NVARCHAR(255),
     FullDescription NVARCHAR(MAX),
     TechnicalSpecifications NVARCHAR(MAX),

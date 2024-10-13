@@ -18,7 +18,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Models\Enum\" />
     <Folder Include="UseCase\Products\Command\" />
   </ItemGroup>
 
