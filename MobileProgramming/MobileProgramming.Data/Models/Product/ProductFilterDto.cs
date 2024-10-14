@@ -11,5 +11,6 @@ namespace MobileProgramming.Business.Models.DTO.Product
         public string? Brand { get; set; }
         public decimal? MinPrice { get; set; }
         public decimal? MaxPrice { get; set; }
+        public int? CategoryId { get; set; }
     }
 }

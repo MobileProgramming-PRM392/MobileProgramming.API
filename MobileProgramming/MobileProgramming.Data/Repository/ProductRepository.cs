@@ -41,6 +41,10 @@ namespace MobileProgramming.Data.Repository
             {
                 query = query.Where(p => p.Price <= filter.MaxPrice.Value);
             }
+            if (filter.CategoryId.HasValue)
+            {
+                query = query.Where(p => p.CategoryId == filter.CategoryId.Value);
+            }
 
 
             switch (sort.SortOption)

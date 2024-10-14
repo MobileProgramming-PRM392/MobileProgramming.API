@@ -11,5 +11,6 @@ namespace MobileProgramming.Data.Models.Enum
         PriceAsc,
         PriceDesc,
         Popularity,
+        
     }
 }

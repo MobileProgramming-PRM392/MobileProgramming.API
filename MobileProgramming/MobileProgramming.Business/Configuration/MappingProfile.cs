@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using MobileProgramming.Business.Models.DTO.CartItems;
+using MobileProgramming.Business.Models.DTO.Category;
 using MobileProgramming.Business.Models.DTO.Product;
 using MobileProgramming.Data.Entities;
 using System;
@@ -18,8 +20,10 @@ namespace MobileProgramming.Business.Configuration
                     src.ProductImages.FirstOrDefault().ImageUrl))
                 .ReverseMap();
 
-            CreateMap<ProductDetailDto, Product>() 
-                .ReverseMap();
+            CreateMap<ProductDetailDto, Product>().ReverseMap();
+
+            CreateMap<CategoryDto, Category>().ReverseMap();
+            CreateMap<CartItem, CartItemDto>().ReverseMap();
         }
     }
 }

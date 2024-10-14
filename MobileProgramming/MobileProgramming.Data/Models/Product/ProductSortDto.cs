@@ -10,5 +10,6 @@ namespace MobileProgramming.Data.Models.Product
     public class ProductSortDto
     {
         public ProductSortOption? SortOption { get; set; }
+       
     }
 }
