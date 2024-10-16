@@ -24,8 +24,8 @@ namespace MobileProgramming.Data.Configuration
             services.AddDbContext<SaleProductDbContext>((sp, options) =>
             {
                 options.UseSqlServer(
-                    configuration.GetConnectionString("local"),
-                    //configuration.GetConnectionString("production"),
+                    //configuration.GetConnectionString("local"),
+                    configuration.GetConnectionString("production"),
                     b =>
                     {
                         b.MigrationsAssembly(typeof(SaleProductDbContext).Assembly.FullName);
