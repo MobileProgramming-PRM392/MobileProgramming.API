@@ -25,7 +25,7 @@ namespace MobileProgramming.API.Controllers
             _mediator = mediator;
 
         }
-
+        // cíu bé
         //[Authorize]
         [HttpGet("")]
         [ProducesResponseType(StatusCodes.Status200OK)]
