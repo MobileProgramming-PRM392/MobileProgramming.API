@@ -11,7 +11,7 @@ ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["MobileProgramming/MobileProgramming.API.csproj", "MobileProgramming/"]
 COPY ["MobileProgramming.Business/MobileProgramming.Business.csproj", "MobileProgramming/"]
-COPY ["MobileProgramming.Data/MobileProgramming.Data.csproj", "MobileProgramming/"]
+COPY ["MobileProgramming/MobileProgramming.Data/MobileProgramming.Data.csproj", "MobileProgramming/"]
 RUN dotnet restore "./MobileProgramming/MobileProgramming.API.csproj"
 COPY . .
 WORKDIR "/src/MobileProgramming"
