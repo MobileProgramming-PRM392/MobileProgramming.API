@@ -45,4 +45,4 @@ jobs:
 
       - name: Restart Azure App Service
         run: |
-          az webapp restart --name PRM-Apps --resource-group FU_Resources
+          az webapp restart --name mobile-programming --resource-group FU_Resources
