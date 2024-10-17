@@ -10,8 +10,8 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["MobileProgramming/MobileProgramming.API.csproj", "MobileProgramming/"]
-COPY ["MobileProgramming.Business/MobileProgramming.Business.csproj", "MobileProgramming.Business/"]
-COPY ["MobileProgramming.Data/MobileProgramming.Data.csproj", "MobileProgramming.Data/"]
+COPY ["MobileProgramming.Business/MobileProgramming.Business.csproj", "MobileProgramming/"]
+COPY ["MobileProgramming.Data/MobileProgramming.Data.csproj", "MobileProgramming/"]
 RUN dotnet restore "./MobileProgramming/MobileProgramming.API.csproj"
 COPY . .
 WORKDIR "/src/MobileProgramming"
