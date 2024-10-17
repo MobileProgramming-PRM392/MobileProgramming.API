@@ -15,7 +15,7 @@ COPY ["MobileProgramming/MobileProgramming.Data/MobileProgramming.Data.csproj", 
 RUN dotnet restore "./MobileProgramming/MobileProgramming.API.csproj"
 COPY . .
 WORKDIR "/src/MobileProgramming"
-RUN dotnet build "./MobileProgramming.API.csproj" -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet build "./MobileProgramming/MobileProgramming.API.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
