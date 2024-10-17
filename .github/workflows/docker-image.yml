@@ -9,7 +9,7 @@ on:
 jobs:
 
   build:
-    if: github.ref == 'refs/heads/main/BE'
+    if: github.ref == 'refs/heads/main'
 
     runs-on: ubuntu-latest
 
@@ -43,4 +43,4 @@ jobs:
 
       - name: Restart Azure App Service
         run: |
-          az webapp restart --name PRM_Apps --resource-group FU_Resources
+          az webapp restart --name PRM-Apps --resource-group FU_Resources
