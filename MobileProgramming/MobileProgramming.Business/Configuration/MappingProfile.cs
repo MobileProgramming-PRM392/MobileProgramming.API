@@ -2,6 +2,8 @@
 using MobileProgramming.Business.Models.DTO.CartItems;
 using MobileProgramming.Business.Models.DTO.Category;
 using MobileProgramming.Business.Models.DTO.Product;
+using MobileProgramming.Business.Models.DTO.User;
+using MobileProgramming.Business.Models.DTO.User.ResponseDto;
 using MobileProgramming.Data.Entities;
 using System;
 using System.Collections.Generic;
@@ -24,6 +26,11 @@ namespace MobileProgramming.Business.Configuration
 
             CreateMap<CategoryDto, Category>().ReverseMap();
             CreateMap<CartItem, CartItemDto>().ReverseMap();
+            
+
+            //user
+            CreateMap<RegisterUserDto, User>().ReverseMap();
+            CreateMap<User, UserInfoResponseDto>().ReverseMap();
         }
     }
 }

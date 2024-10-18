@@ -10,6 +10,11 @@ using MobileProgramming.Data.ExternalServices.Caching;
 using MobileProgramming.Data.Interfaces.Common;
 using MobileProgramming.Data.Repository;
 using MobileProgramming.Data.Interfaces;
+using Infrastructure.ExternalServices.Authentication.Setting;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Infrastructure.ExternalServices.Authentication;
 
 
 namespace MobileProgramming.Data.Configuration
@@ -19,7 +24,7 @@ namespace MobileProgramming.Data.Configuration
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
             services.Configure<RedisSetting>(configuration.GetSection("Redis"));
-
+            services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
             //Add DBcontext
             services.AddDbContext<SaleProductDbContext>((sp, options) =>
             {
@@ -61,6 +66,30 @@ namespace MobileProgramming.Data.Configuration
                 options.Cookie.IsEssential = true;
             });
 
+
+            
+            //Add JWTconfig
+            services.AddAuthentication(opt =>
+            {
+                opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                opt.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidIssuer = configuration.GetSection("JWTSettings:Issuer").Get<string>(),
+                    ValidAudience = configuration.GetSection("JWTSettings:Audience").Get<string>(),
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration.GetSection("JWTSettings:Securitykey").Get<string>())),
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    RequireExpirationTime = true,
+                    //ClockSkew = TimeSpan.Zero
+                };
+            });
+
             //add distributed lock with redis in DI container
             services.AddSingleton<IDistributedLockProvider>(_ =>
             new RedisDistributedSynchronizationProvider(redisDatabase!.GetDatabase()));
@@ -74,6 +103,8 @@ namespace MobileProgramming.Data.Configuration
             services.AddScoped<IProductImageRepository, ProductImageRepository>();
             services.AddScoped<ICartItemRepository, CartItemRepository>();
             services.AddScoped<ICartRepository, CartRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IJwtProvider, JwtProvider>();
             return services;
 
 
