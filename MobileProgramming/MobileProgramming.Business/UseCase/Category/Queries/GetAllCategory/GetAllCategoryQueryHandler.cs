@@ -28,7 +28,7 @@ namespace MobileProgramming.Business.UseCase.Category.Queries.GetAllCategory
         {
             var response = new APIResponse();
 
-            var cacheKey = "all_categories";
+           /* var cacheKey = "all_categories";
             var cachingData = await _caching.GetAsync<List<CategoryDto>>(cacheKey);
             if (cachingData != null)
             {
@@ -38,7 +38,7 @@ namespace MobileProgramming.Business.UseCase.Category.Queries.GetAllCategory
                     Message = MessageCommon.Complete,
                     Data = cachingData
                 };
-            }
+            }*/
 
             var result = await _categoryRepository.GetAll();
 
@@ -46,7 +46,7 @@ namespace MobileProgramming.Business.UseCase.Category.Queries.GetAllCategory
             response.StatusResponse = HttpStatusCode.OK;
             response.Message = MessageCommon.GetSuccesfully;
             response.Data = listCategory;
-            await _caching.SetAsync(cacheKey, listCategory, 5);
+            //await _caching.SetAsync(cacheKey, listCategory, 5);
             return response;
         }
     }
