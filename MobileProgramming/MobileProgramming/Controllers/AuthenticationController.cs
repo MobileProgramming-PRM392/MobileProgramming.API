@@ -9,7 +9,7 @@ using System.Net;
 
 namespace MobileProgramming.API.Controllers;
 
-[Route("api/v1/authentication")]
+[Route("api/v1/authenticate")]
 [ApiController]
 public class AuthenticationController : ControllerBase
 {
@@ -21,13 +21,13 @@ public class AuthenticationController : ControllerBase
         _mediator = mediator;
 
     }
-    [HttpPost("/register")]
+    [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody, Required] RegisterUserDto user, CancellationToken token = default)
     {
         var result = await _mediator.Send(new RegisterCommand(user), token);
         return (result.StatusResponse != HttpStatusCode.OK) ? Ok(result) : StatusCode((int)result.StatusResponse, result);
     }
-    [HttpPost("/login")]
+    [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody, Required] LoginDto user, CancellationToken token = default)
     {
         var result = await _mediator.Send(new LoginCommand(user), token);
