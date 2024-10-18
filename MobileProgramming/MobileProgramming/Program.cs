@@ -1,6 +1,7 @@
 
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.OpenApi.Models;
 using MobileProgramming.API;
 using MobileProgramming.Business;
 using MobileProgramming.Data.Configuration;
@@ -21,9 +22,8 @@ builder.Services.ConfigureHealthChecks(builder.Configuration);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-/*
- builder.Services.AddSwaggerGen(option =>
+//builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(option =>
 {
     option.SwaggerDoc("v1", new OpenApiInfo { Title = "Demo API", Version = "v1" });
     option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
@@ -50,7 +50,6 @@ builder.Services.AddSwaggerGen();
         }
     });
 });
- */
 builder.Services.AddCors();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
