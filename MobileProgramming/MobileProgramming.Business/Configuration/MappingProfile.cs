@@ -23,6 +23,8 @@ namespace MobileProgramming.Business.Configuration
                 .ReverseMap();
 
             CreateMap<ProductDetailDto, Product>().ReverseMap();
+            CreateMap<CreateProductDto, Product>().ReverseMap();
+
 
             CreateMap<CategoryDto, Category>().ReverseMap();
             CreateMap<CartItem, CartItemDto>().ReverseMap();

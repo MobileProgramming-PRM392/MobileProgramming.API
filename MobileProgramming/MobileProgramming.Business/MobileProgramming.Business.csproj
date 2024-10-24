@@ -17,8 +17,4 @@
     <ProjectReference Include="..\MobileProgramming.Data\MobileProgramming.Data.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="UseCase\Products\Command\" />
-  </ItemGroup>
-
 </Project>
