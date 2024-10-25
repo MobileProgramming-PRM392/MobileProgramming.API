@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Infrastructure.ExternalServices.Authentication;
+using MobileProgramming.Data.ExternalServices.UploadFile;
 
 
 namespace MobileProgramming.Data.Configuration
@@ -105,6 +106,7 @@ namespace MobileProgramming.Data.Configuration
             services.AddScoped<ICartRepository, CartRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IJwtProvider, JwtProvider>();
+            services.AddScoped<IImageService, ImageService>();
             return services;
 
 
