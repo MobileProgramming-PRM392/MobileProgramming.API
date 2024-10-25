@@ -38,18 +38,8 @@ public class CreateProductHandler : IRequestHandler<CreateProductCommand, APIRes
         Product newProduct = _mapper.Map<Product>(request.Dto);
         try
         {
-            foreach(var image in request.Dto.Images)
-            {
-                Guid id = Guid.NewGuid();
-                ProductImage newImage = new ProductImage();
-                newImage.ProductId = newProduct.ProductId;
-                string? imageUrl = await _imageService.UploadImage(image.base64!, newProduct.ProductName + "-" + id.ToString());
-                if (imageUrl != null)
-                {
-                    newImage.ImageUrl = imageUrl;
-                }
-                newProduct.ProductImages.Add(newImage);
-            }
+            await ProcessImages(request.Dto.Images, newProduct);
+
             await _productRepository.Add(newProduct);
             if (await _unitOfWork.SaveChangesAsync() > 0)
             {
@@ -75,6 +65,24 @@ public class CreateProductHandler : IRequestHandler<CreateProductCommand, APIRes
                 Message = MessageCommon.CreateFailed,
                 Data = ex.Message
             };
+        }
+    }
+    private async Task ProcessImages(IEnumerable<ProductImageDto> images, Product newProduct)
+    {
+        if (images == null || !images.Any()) return;
+
+        foreach (var image in images)
+        {
+            var newImage = new ProductImage
+            {
+                ProductId = newProduct.ProductId,
+                ImageUrl = await _imageService.UploadImage(image.base64!, $"{newProduct.ProductName}-{Guid.NewGuid()}")
+            };
+
+            if (!string.IsNullOrEmpty(newImage.ImageUrl))
+            {
+                newProduct.ProductImages.Add(newImage);
+            }
         }
     }
 }
