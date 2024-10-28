@@ -4,12 +4,13 @@ using MobileProgramming.Business.Models.DTO.Category;
 using MobileProgramming.Business.Models.DTO.Product;
 using MobileProgramming.Business.Models.Response;
 using MobileProgramming.Business.Models.ResponseMessage;
+using MobileProgramming.Business.UseCase.Categories.Queries.GetAllCategory;
 using MobileProgramming.Data.Entities;
 using MobileProgramming.Data.Interfaces;
 using MobileProgramming.Data.Interfaces.Common;
 using System.Net;
 
-namespace MobileProgramming.Business.UseCase.Category.Queries.GetAllCategory
+namespace MobileProgramming.Business.UseCase.Categoies.Queries.GetAllCategory
 {
     public class GetAllCategoryQueryHandler : IRequestHandler<GetAllCategoryQuery, APIResponse>
     {

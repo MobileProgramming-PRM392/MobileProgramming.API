@@ -23,7 +23,7 @@ public class CreateProductDto
 
     public string? TechnicalSpecifications { get; set; }
 
-    [Required(ErrorMessage = "FullDescription is required!")]
+    [Required(ErrorMessage = "Price is required!")]
     [Range(0.00, 1000_000_000.00, ErrorMessage ="Price ranged between 0 and 1000 000 000")]
     public decimal Price { get; set; }
 

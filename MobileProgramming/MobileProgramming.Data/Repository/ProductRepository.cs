@@ -25,6 +25,11 @@ namespace MobileProgramming.Data.Repository
             _context = context;
         }
 
+        public async Task<List<Product>> GetbyCategoryId(int id)
+        {
+            return await _context.Products.Where(p => p.CategoryId == id).ToListAsync();
+        }
+
         public async Task<List<Product>> GetFilteredProductsAsync(ProductFilterDto filter, ProductSortDto sort)
         {
             var query = _context.Products.AsQueryable();
