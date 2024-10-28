@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MobileProgramming.Business.UseCase.Category.Queries.GetAllCategory
+namespace MobileProgramming.Business.UseCase.Categories.Queries.GetAllCategory
 {
     public class GetAllCategoryQuery : IRequest<APIResponse>
     {

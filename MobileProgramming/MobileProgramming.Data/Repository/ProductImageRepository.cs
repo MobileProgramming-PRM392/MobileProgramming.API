@@ -24,5 +24,14 @@ namespace MobileProgramming.Data.Repository
         {
             return await _context.ProductImages.Where(pi => pi.ProductId == productId).Select(pi => pi.ImageUrl).ToListAsync();
         }
+        public async Task<List<ProductImage>> GetByProductId(int productId)
+        {
+            return await _context.ProductImages.Where(pi => pi.ProductId == productId).ToListAsync();
+        }
+
+        public async Task<ProductImage?> GetByImageUrl(string url)
+        {
+            return await _context.ProductImages.FirstOrDefaultAsync(p => p.ImageUrl.Equals(url));
+        }
     }
 }

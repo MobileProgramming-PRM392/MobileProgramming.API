@@ -16,5 +16,6 @@ namespace MobileProgramming.Data.Interfaces
         Task<List<Product>> GetFilteredProductsAsync(ProductFilterDto filter, ProductSortDto sort);
         Task<List<Product>> GetProductsToDisplay();
         Task<Product?> GetProductDetail(int productId);
+        Task<List<Product>> GetbyCategoryId(int id);
     }
 }

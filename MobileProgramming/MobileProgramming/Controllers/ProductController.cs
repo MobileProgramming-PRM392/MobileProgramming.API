@@ -6,10 +6,14 @@ using Microsoft.AspNetCore.Mvc;
 using MobileProgramming.Business.Models.DTO.Product;
 using MobileProgramming.Business.Models.Response;
 using MobileProgramming.Business.UseCase.Products.Command.CreateProduct;
+using MobileProgramming.Business.UseCase.Products.Command.DeleteProduct;
+using MobileProgramming.Business.UseCase.Products.Command.DeleteProductImage;
+using MobileProgramming.Business.UseCase.Products.Command.UpdateProduct;
 using MobileProgramming.Business.UseCase.Products.Command.UploadProducImages;
 using MobileProgramming.Business.UseCase.Products.Queries.GetAllProducts;
 using MobileProgramming.Business.UseCase.Products.Queries.GetFilteredProducts;
 using MobileProgramming.Business.UseCase.Products.Queries.GetProductDetail;
+using MobileProgramming.Data.Entities;
 using MobileProgramming.Data.Models.Product;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
@@ -60,17 +64,44 @@ namespace MobileProgramming.API.Controllers
             var result = await _mediator.Send(new GetFilteredProductsQuery(filter, sort), cancellationToken);
             return (result.StatusResponse != HttpStatusCode.OK) ? result : StatusCode((int)result.StatusResponse, result);
         }
+        
+        
         [HttpPost]
         public async Task<IActionResult> CreateProduct([FromBody, Required] CreateProductDto dto, CancellationToken token= default)
         {
             var result = await _mediator.Send(new CreateProductCommand(dto), token);
             return (result.StatusResponse != HttpStatusCode.OK) ? Ok(result) : StatusCode((int)result.StatusResponse, result);
         }
+        
+        
+        
         [HttpPost("upload-image")]
         public async Task<IActionResult> UploadImage([FromBody, Required] List<ProductImageDto> images,[FromQuery, Required] int productId, 
             CancellationToken token= default)
         {
             var result = await _mediator.Send(new UploadProducImagesCommand(productId, images), token);
+            return (result.StatusResponse != HttpStatusCode.OK) ? Ok(result) : StatusCode((int)result.StatusResponse, result);
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteProduct([FromQuery, Required] int productId, CancellationToken token= default)
+        {
+            var result = await _mediator.Send(new DeleteProductCommand(productId), token);
+            return (result.StatusResponse != HttpStatusCode.OK) ? Ok(result) : StatusCode((int)result.StatusResponse, result);
+        }
+
+        [HttpDelete("image")]
+        public async Task<IActionResult> DeleteProduct([FromQuery, Required] string url, CancellationToken token = default)
+        {
+            var result = await _mediator.Send(new DeleteProductImageCommand(url), token);
+            return (result.StatusResponse != HttpStatusCode.OK) ? Ok(result) : StatusCode((int)result.StatusResponse, result);
+        }
+
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateProduct([FromQuery, Required] int produccId, [FromBody, Required] CreateProductDto dto, CancellationToken token= default)
+        {
+            var result = await _mediator.Send(new UpdateProductCommand(produccId, dto), token);
             return (result.StatusResponse != HttpStatusCode.OK) ? Ok(result) : StatusCode((int)result.StatusResponse, result);
         }
     }

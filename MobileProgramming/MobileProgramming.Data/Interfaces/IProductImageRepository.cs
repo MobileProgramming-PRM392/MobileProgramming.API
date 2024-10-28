@@ -10,6 +10,8 @@ namespace MobileProgramming.Data.Interfaces
 {
     public interface IProductImageRepository : IRepository<ProductImage>
     {
-        Task<List<string>> GetImageUrlByProductId(int productId);   
+        Task<List<string>> GetImageUrlByProductId(int productId);
+        Task<List<ProductImage>> GetByProductId(int productId);
+        Task<ProductImage?> GetByImageUrl(string url);
     }
 }
