@@ -43,7 +43,13 @@ public class UpdateProductHandler : IRequestHandler<UpdateProductCommand, APIRes
                 Data = null
             };
         }
-        existProduct = _mapper.Map<Product>(request.Dto);
+        existProduct.Price = request.Dto.Price;
+        existProduct.BriefDescription = request.Dto.BriefDescription;
+        existProduct.FullDescription = request.Dto.FullDescription;
+        existProduct.ProductName = request.Dto.ProductName;
+        existProduct.ProductBrand = request.Dto.ProductBrand;
+        existProduct.CategoryId = request.Dto.CategoryId;
+        existProduct.TechnicalSpecifications = request.Dto.TechnicalSpecifications;
         try
         {
             await ProcessImages(request.Dto.Images, existProduct);
