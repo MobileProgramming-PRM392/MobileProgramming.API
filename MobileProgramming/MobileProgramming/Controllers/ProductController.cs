@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using MobileProgramming.Business.Models.DTO.Product;
 using MobileProgramming.Business.Models.Response;
 using MobileProgramming.Business.UseCase.Products.Command.CreateProduct;
+using MobileProgramming.Business.UseCase.Products.Command.UploadProducImages;
 using MobileProgramming.Business.UseCase.Products.Queries.GetAllProducts;
 using MobileProgramming.Business.UseCase.Products.Queries.GetFilteredProducts;
 using MobileProgramming.Business.UseCase.Products.Queries.GetProductDetail;
@@ -63,6 +64,13 @@ namespace MobileProgramming.API.Controllers
         public async Task<IActionResult> CreateProduct([FromBody, Required] CreateProductDto dto, CancellationToken token= default)
         {
             var result = await _mediator.Send(new CreateProductCommand(dto), token);
+            return (result.StatusResponse != HttpStatusCode.OK) ? Ok(result) : StatusCode((int)result.StatusResponse, result);
+        }
+        [HttpPost("upload-image")]
+        public async Task<IActionResult> UploadImage([FromBody, Required] List<ProductImageDto> images,[FromQuery, Required] int productId, 
+            CancellationToken token= default)
+        {
+            var result = await _mediator.Send(new UploadProducImagesCommand(productId, images), token);
             return (result.StatusResponse != HttpStatusCode.OK) ? Ok(result) : StatusCode((int)result.StatusResponse, result);
         }
     }
