@@ -105,6 +105,7 @@ namespace MobileProgramming.Data.Configuration
             services.AddScoped<ICartItemRepository, CartItemRepository>();
             services.AddScoped<ICartRepository, CartRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IChatMessageRepository, ChatMessageRepository>();
             services.AddScoped<IJwtProvider, JwtProvider>();
             services.AddScoped<IImageService, ImageService>();
             return services;

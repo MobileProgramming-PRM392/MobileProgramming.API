@@ -6,6 +6,7 @@ using MobileProgramming.API.Helper;
 using MobileProgramming.Business.Models.DTO.User;
 using MobileProgramming.Business.UseCase.Authentication.Command.Login;
 using MobileProgramming.Business.UseCase.Authentication.Command.Register;
+using MobileProgramming.Business.UseCase.ChatMessages;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
 
@@ -35,11 +36,11 @@ public class AuthenticationController : ControllerBase
         var result = await _mediator.Send(new LoginCommand(user), token);
         return (result.StatusResponse != HttpStatusCode.OK) ? Ok(result) : StatusCode((int)result.StatusResponse, result);
     }
-    /*[Authorize]
+    /*[Authorize]*/
     [HttpGet]
-    public IActionResult CurrentUserId()
+    public async Task<IActionResult> CurrentUserId()
     {
-        int id = int.Parse(User.GetUserIdFromToken());
-        return Ok(id);
-    }*/
+        var result = await _mediator.Send(new TestCommand());
+        return Ok(result);
+    }
 }
