@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using MobileProgramming.Business.Models.DTO;
 using MobileProgramming.Business.Models.DTO.CartItems;
 using MobileProgramming.Business.Models.DTO.Category;
 using MobileProgramming.Business.Models.DTO.Product;
@@ -28,6 +29,7 @@ namespace MobileProgramming.Business.Configuration
 
             CreateMap<CategoryDto, Category>().ReverseMap();
             CreateMap<CartItem, CartItemDto>().ReverseMap();
+            CreateMap<Cart, CartDto>().ReverseMap();
             
 
             //user
