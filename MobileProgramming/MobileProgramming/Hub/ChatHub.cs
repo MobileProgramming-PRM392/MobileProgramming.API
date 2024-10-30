@@ -1,20 +1,149 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.SignalR;
+using MobileProgramming.Business.Models.DTO.Chat;
+using MobileProgramming.Data.Entities;
 using MobileProgramming.Data.Interfaces;
+using MobileProgramming.Data.Interfaces.Common;
+using Newtonsoft.Json;
 
-namespace MobileProgramming.API.Hub;
+namespace MobileProgramming.API.Hubs;
 
 
 
 public interface IChatHub
 {
-    Task SendMessage(int userId, string message);
+    Task SendChatMessages(ChatDto dto);
 }
-public class ChatHub: Hub<IChatHub>
+public class ChatHub: Hub
 {
     private readonly IChatMessageRepository _messageRepository;
-
-    public ChatHub(IChatMessageRepository messageRepository)
+    private readonly IUserRepository _userRepo;
+    private readonly IMapper _mapper;
+    private readonly IUnitOfWork _unitOfWork;
+    public ChatHub(IChatMessageRepository messageRepository, IUserRepository userRepo, 
+        IMapper mapper, IUnitOfWork unitOfWork)
     {
         _messageRepository = messageRepository;
+        _userRepo = userRepo;
+        _mapper = mapper;
+        _unitOfWork = unitOfWork;
+    }
+    public override async Task OnConnectedAsync()
+    {
+        await Clients.All.SendAsync("connection check",$"connection estabished: {Context.ConnectionId}");
+    }
+    public async Task SendMessageChatTest(string messageDto)
+    {
+        //SendMessageDto  dto = JsonConvert.DeserializeObject<SendMessageDto>(messageDto);
+        ChatMessage message = new ChatMessage();
+        string[] temp = messageDto.Split(',');
+        message.UserId = int.Parse(temp[0]);
+        message.SendTo = int.Parse(temp[1]);
+        message.Message = temp[2];
+        await Groups.AddToGroupAsync(Context.ConnectionId, temp[3]);
+        await _messageRepository.Add(message);
+        if(await _unitOfWork.SaveChangesAsync() > 0)
+        {
+            UserInfoDto sendFrom = _mapper.Map<UserInfoDto>(await _userRepo.GetById(message.UserId!));
+            UserInfoDto sendTo = _mapper.Map<UserInfoDto>(await _userRepo.GetById(message.SendTo));
+            ChatDto chatMessage = new ChatDto
+            {
+                ChatMessageId = message.ChatMessageId,
+                SendFrom = sendFrom,
+                SendTo = sendTo,
+                Message = message.Message,
+                SentAt = message.SentAt,
+            };
+            
+            await Clients.All.SendAsync("Received-message", JsonConvert.SerializeObject(chatMessage)); 
+        }
+    }
+    public async Task SendPrivateMessageChatTest(string messageDto)
+    {
+        //SendMessageDto  dto = JsonConvert.DeserializeObject<SendMessageDto>(messageDto);
+        ChatMessage message = new ChatMessage();
+        string[] temp = messageDto.Split(',');
+        message.UserId = int.Parse(temp[0]);
+        message.SendTo = int.Parse(temp[1]);
+        message.Message = temp[2];
+        await Groups.AddToGroupAsync(Context.ConnectionId, temp[3]);
+        await _messageRepository.Add(message);
+        if (await _unitOfWork.SaveChangesAsync() > 0)
+        {
+            UserInfoDto sendFrom = _mapper.Map<UserInfoDto>(await _userRepo.GetById(message.UserId!));
+            UserInfoDto sendTo = _mapper.Map<UserInfoDto>(await _userRepo.GetById(message.SendTo));
+            ChatDto chatMessage = new ChatDto
+            {
+                ChatMessageId = message.ChatMessageId,
+                SendFrom = sendFrom,
+                SendTo = sendTo,
+                Message = message.Message,
+                SentAt = message.SentAt,
+            };
+            await Clients.Group(temp[3]).SendAsync("Received-message", JsonConvert.SerializeObject(chatMessage));
+        }
+    }
+    public async Task SendMessageChat(SendMessageDto dto)
+    {
+        var message = CreateChatMessage(dto);
+        await Groups.AddToGroupAsync(Context.ConnectionId, dto.RoomNo.ToString());
+        await _messageRepository.Add(message);
+
+        if (await _unitOfWork.SaveChangesAsync() > 0)
+        {
+            await NotifyAllClients(message);
+        }
+    }
+
+    public async Task SendPrivateMessageChat(SendMessageDto dto)
+    {
+        var message = CreateChatMessage(dto);
+        await Groups.AddToGroupAsync(Context.ConnectionId, dto.RoomNo.ToString());
+        await _messageRepository.Add(message);
+
+        if (await _unitOfWork.SaveChangesAsync() > 0)
+        {
+            await NotifyGroupClients(message, dto.RoomNo.ToString());
+        }
+    }
+
+    private ChatMessage CreateChatMessage(SendMessageDto dto)
+    {
+        return new ChatMessage
+        {
+            UserId = dto.UserId,
+            SendTo = dto.SendTo,
+            Message = dto.Message
+        };
+    }
+
+    private async Task NotifyAllClients(ChatMessage message)
+    {
+        var sendFrom = _mapper.Map<UserInfoDto>(await _userRepo.GetById(message.UserId!));
+        var chatMessage = CreateChatDto(message, sendFrom);
+        await Clients.All.SendAsync("Received-message", JsonConvert.SerializeObject(chatMessage));
+    }
+
+    private async Task NotifyGroupClients(ChatMessage message, string roomNo)
+    {
+        var sendFrom = _mapper.Map<UserInfoDto>(await _userRepo.GetById(message.UserId!));
+        var chatMessage = await  CreateChatDto(message, sendFrom);
+        await Clients.Group(roomNo).SendAsync("Received-message", JsonConvert.SerializeObject(chatMessage));
+    }
+
+    private async Task<ChatDto> CreateChatDto(ChatMessage message, UserInfoDto sendFrom)
+    {
+        return new ChatDto
+        {
+            ChatMessageId = message.ChatMessageId,
+            SendFrom = sendFrom,
+            SendTo = _mapper.Map<UserInfoDto>(await _userRepo.GetById(message.SendTo)),
+            Message = message.Message,
+            SentAt = message.SentAt,
+        };
+    }
+    public async Task SendMessageTest(string message)
+    {
+        await Clients.All.SendAsync("Received-message", message);
     }
 }
