@@ -3,7 +3,7 @@ using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.OpenApi.Models;
 using MobileProgramming.API;
-using MobileProgramming.API.Hub;
+using MobileProgramming.API.Hubs;
 using MobileProgramming.Business;
 using MobileProgramming.Data.Configuration;
 using MobileProgramming.Data.Persistence;

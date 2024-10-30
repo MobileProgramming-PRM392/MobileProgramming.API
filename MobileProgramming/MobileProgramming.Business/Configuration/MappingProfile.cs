@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MobileProgramming.Business.Models.DTO.CartItems;
 using MobileProgramming.Business.Models.DTO.Category;
+using MobileProgramming.Business.Models.DTO.Chat;
 using MobileProgramming.Business.Models.DTO.Product;
 using MobileProgramming.Business.Models.DTO.User;
 using MobileProgramming.Business.Models.DTO.User.ResponseDto;
@@ -33,6 +34,10 @@ namespace MobileProgramming.Business.Configuration
             //user
             CreateMap<RegisterUserDto, User>().ReverseMap();
             CreateMap<User, UserInfoResponseDto>().ReverseMap();
+            CreateMap<User, UserInfoDto>().ReverseMap();
+
+            //chat
+            CreateMap<SendMessageDto, ChatMessage>().ReverseMap();
         }
     }
 }

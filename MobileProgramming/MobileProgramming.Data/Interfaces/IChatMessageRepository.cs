@@ -10,4 +10,5 @@ namespace MobileProgramming.Data.Interfaces;
 
 public interface IChatMessageRepository: IRepository<ChatMessage>
 {
+    Task<List<ChatMessage>> GetChatHistory(int senderId, int? recepientId);
 }
