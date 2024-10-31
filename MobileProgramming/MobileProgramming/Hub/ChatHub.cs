@@ -91,7 +91,9 @@ public class ChatHub: Hub
 
         if (await _unitOfWork.SaveChangesAsync() > 0)
         {
-            await NotifyAllClients(message);
+            var sendFrom = _mapper.Map<UserInfoDto>(await _userRepo.GetById(message.UserId!));
+            var chatMessage = await CreateChatDto(message, sendFrom);
+            await Clients.All.SendAsync("Received-message", chatMessage/*JsonConvert.SerializeObject(chatMessage)*/);
         }
     }
 
@@ -103,7 +105,9 @@ public class ChatHub: Hub
 
         if (await _unitOfWork.SaveChangesAsync() > 0)
         {
-            await NotifyGroupClients(message, dto.RoomNo.ToString());
+            var sendFrom = _mapper.Map<UserInfoDto>(await _userRepo.GetById(message.UserId!));
+            var chatMessage = await CreateChatDto(message, sendFrom);
+            await Clients.Group(dto.RoomNo.ToString()).SendAsync("Received-message", chatMessage/*JsonConvert.SerializeObject(chatMessage)*/);
         }
     }
 
@@ -116,21 +120,6 @@ public class ChatHub: Hub
             Message = dto.Message
         };
     }
-
-    private async Task NotifyAllClients(ChatMessage message)
-    {
-        var sendFrom = _mapper.Map<UserInfoDto>(await _userRepo.GetById(message.UserId!));
-        var chatMessage = CreateChatDto(message, sendFrom);
-        await Clients.All.SendAsync("Received-message", JsonConvert.SerializeObject(chatMessage));
-    }
-
-    private async Task NotifyGroupClients(ChatMessage message, string roomNo)
-    {
-        var sendFrom = _mapper.Map<UserInfoDto>(await _userRepo.GetById(message.UserId!));
-        var chatMessage = await  CreateChatDto(message, sendFrom);
-        await Clients.Group(roomNo).SendAsync("Received-message", JsonConvert.SerializeObject(chatMessage));
-    }
-
     private async Task<ChatDto> CreateChatDto(ChatMessage message, UserInfoDto sendFrom)
     {
         return new ChatDto
