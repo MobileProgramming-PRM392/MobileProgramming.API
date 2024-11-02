@@ -16,6 +16,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Infrastructure.ExternalServices.Authentication;
 using MobileProgramming.Data.ExternalServices.UploadFile;
+using MobileProgramming.Data.ExternalServices.Payment.ZaloPay;
 
 
 namespace MobileProgramming.Data.Configuration
@@ -105,8 +106,11 @@ namespace MobileProgramming.Data.Configuration
             services.AddScoped<ICartItemRepository, CartItemRepository>();
             services.AddScoped<ICartRepository, CartRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<INotificationRepository, NotificationRepository>();
+            services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<IJwtProvider, JwtProvider>();
             services.AddScoped<IImageService, ImageService>();
+            services.AddScoped<IZaloPayService, ZaloPayService>();
             return services;
 
 
