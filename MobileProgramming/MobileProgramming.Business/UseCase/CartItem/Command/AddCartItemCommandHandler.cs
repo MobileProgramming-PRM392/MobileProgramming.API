@@ -5,6 +5,7 @@ using MobileProgramming.Business.Models.Response;
 using MobileProgramming.Business.Models.ResponseMessage;
 using MobileProgramming.Data.Entities;
 using MobileProgramming.Data.Interfaces;
+using MobileProgramming.Data.Interfaces.Common;
 using System.Net;
 
 namespace MobileProgramming.Business.UseCase
@@ -15,13 +16,15 @@ namespace MobileProgramming.Business.UseCase
         private readonly ICartItemRepository _cartItemRepository;
         private readonly IProductRepository _productRepository;
         private readonly IMapper _mapper;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public AddCartItemCommandHandler(ICartRepository cartRepository, ICartItemRepository cartItemRepository, IProductRepository productRepository, IMapper mapper)
+        public AddCartItemCommandHandler(ICartRepository cartRepository, ICartItemRepository cartItemRepository, IProductRepository productRepository, IMapper mapper, IUnitOfWork unitOfWork)
         {
             _cartRepository = cartRepository;
             _cartItemRepository = cartItemRepository;
             _productRepository = productRepository;
             _mapper = mapper;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<APIResponse> Handle(AddCartItemCommand request, CancellationToken cancellationToken)
@@ -39,6 +42,7 @@ namespace MobileProgramming.Business.UseCase
                 };
 
                 await _cartRepository.Add(cart);
+                await _unitOfWork.SaveChangesAsync();
             }
 
             var cartItem = await _cartItemRepository.GetCartItemAsync(cart.CartId, request.ProductId);
@@ -71,6 +75,7 @@ namespace MobileProgramming.Business.UseCase
                 };
 
                 await _cartItemRepository.Add(cartItem);
+                await _unitOfWork.SaveChangesAsync();
             }
 
             var finalCartItem = _mapper.Map<CartItemDto>(cartItem);

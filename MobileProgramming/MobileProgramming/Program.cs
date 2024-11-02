@@ -3,6 +3,7 @@ using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.OpenApi.Models;
 using MobileProgramming.API;
+using MobileProgramming.API.Hubs;
 using MobileProgramming.Business;
 using MobileProgramming.Data.Configuration;
 using MobileProgramming.Data.Persistence;
@@ -53,7 +54,7 @@ builder.Services.AddSwaggerGen(option =>
 builder.Services.AddCors();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-
+builder.Services.AddSignalR();
 
 var app = builder.Build();
 
@@ -95,6 +96,6 @@ app.MapHealthChecks("/h", new HealthCheckOptions
     ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
 });
 app.ConfigureExceptionHandler();
-
+app.MapHub<ChatHub>("/chat-hub");
 
 app.Run();

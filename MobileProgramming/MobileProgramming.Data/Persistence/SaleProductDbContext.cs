@@ -91,10 +91,13 @@ public partial class SaleProductDbContext : DbContext, IUnitOfWork
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
             entity.Property(e => e.UserId).HasColumnName("UserID");
-
+            entity.Property(e => e.SendTo).HasColumnName("SendTo");
             entity.HasOne(d => d.User).WithMany(p => p.ChatMessages)
                 .HasForeignKey(d => d.UserId)
                 .HasConstraintName("FK__ChatMessa__UserI__534D60F1");
+            entity.HasOne(d => d.User).WithMany(p => p.ChatMessages)
+                .HasForeignKey(d => d.SendTo)
+                .HasConstraintName("ChatMessages_Users_SendTo_fk");
         });
 
         modelBuilder.Entity<Notification>(entity =>
