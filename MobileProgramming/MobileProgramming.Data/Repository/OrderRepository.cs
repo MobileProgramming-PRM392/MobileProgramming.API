@@ -23,7 +23,7 @@ namespace MobileProgramming.Data.Repository
             DateTime? startDate = null,
             DateTime? endDate = null)
         {
-            var query = _context.Orders.AsQueryable();
+            var query = _context.Orders.Include(c => c.Cart).ThenInclude(c => c.CartItems).AsQueryable();
 
             if (orderId.HasValue)
             {

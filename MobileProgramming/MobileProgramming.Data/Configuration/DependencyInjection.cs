@@ -17,6 +17,7 @@ using System.Text;
 using Infrastructure.ExternalServices.Authentication;
 using MobileProgramming.Data.ExternalServices.UploadFile;
 using MobileProgramming.Data.ExternalServices.Payment.ZaloPay;
+using MobileProgramming.Data.ExternalServices.Payment.ZaloPay.Setting;
 
 
 namespace MobileProgramming.Data.Configuration
@@ -27,6 +28,7 @@ namespace MobileProgramming.Data.Configuration
         {
             services.Configure<RedisSetting>(configuration.GetSection("Redis"));
             services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
+            services.Configure<ZaloPaySetting>(configuration.GetSection("ZaloPay"));
             //Add DBcontext
             services.AddDbContext<SaleProductDbContext>((sp, options) =>
             {

@@ -17,13 +17,13 @@ namespace MobileProgramming.Data.ExternalServices.Payment.ZaloPay
         }
 
 
-        public async Task<Dictionary<string, object>> CreateOrderAsync(string amount, string appUser, string description, string app_trans_id)
+        public async Task<Dictionary<string, object>> CreateOrderAsync(string amount, string description, string app_trans_id)
         {
             var items = new[] { new { } };
             var param = new Dictionary<string, string>();
 
             param.Add("app_id", _zaloPaySettings.Appid!);
-            param.Add("app_user", appUser);
+            param.Add("app_user", "user123");
             param.Add("app_time", Utils.GetTimeStamp().ToString());
             param.Add("expire_duration_seconds", "900");
             param.Add("amount", amount);

@@ -1,10 +1,8 @@
-﻿namespace MobileProgramming.Business.Models.DTO.CartItems
+﻿namespace MobileProgramming.Business.Models.DTO.Order
 {
-    public class CartItemDto
+    public class CartOrderItemDto
     {
         public int CartItemId { get; set; }
-
-        public int? CartId { get; set; }
 
         public int? ProductId { get; set; }
 
