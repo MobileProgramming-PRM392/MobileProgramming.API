@@ -51,15 +51,9 @@ namespace MobileProgramming.Business.UseCase.Order.Commands.CreateOrder
             }
 
             Random rnd = new Random();
-            string app_trans_id = DateTime.Now.ToString("yyMMdd") + "_" + rnd.Next(1000000);
+            string app_trans_id = DateTime.UtcNow.ToString("yyMMdd") + "_" + rnd.Next(1000000);
 
-            // Call API to create transaction
             var result = await _zaloPayService.CreateOrderAsync(request.Amount, request.Description!, app_trans_id);
-            //var return_code = (long)result["return_code"];
-            //var return_message = (string)result["return_message"];
-            ////var zp_trans_token = (string)result["zp_trans_token"];
-            //var order_token = (string)result["order_token"];
-            //var qr_code = (string)result["qr_code"];
 
             var order = new Data.Entities.Order
             {

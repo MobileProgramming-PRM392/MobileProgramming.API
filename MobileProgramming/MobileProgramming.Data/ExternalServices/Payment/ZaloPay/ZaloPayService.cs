@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.Extensions.Options;
 using MobileProgramming.Data.ExternalServices.Payment.ZaloPay.Setting;
 using MobileProgramming.Data.Helper.ZaloPayHelper;
 using MobileProgramming.Data.Helper.ZaloPayHelper.Crypto;
@@ -19,26 +20,30 @@ namespace MobileProgramming.Data.ExternalServices.Payment.ZaloPay
 
         public async Task<Dictionary<string, object>> CreateOrderAsync(string amount, string description, string app_trans_id)
         {
+
+
+            Random rnd = new Random();
+            var embed_data = new {  };
             var items = new[] { new { } };
             var param = new Dictionary<string, string>();
+            //var app_trans_idd = rnd.Next(1000000);
 
-            param.Add("app_id", _zaloPaySettings.Appid!);
+            param.Add("app_id", _zaloPaySettings.Appid);
             param.Add("app_user", "user123");
             param.Add("app_time", Utils.GetTimeStamp().ToString());
-            param.Add("expire_duration_seconds", "900");
+            param.Add("expire_duration_seconds", "1200");
             param.Add("amount", amount);
-            param.Add("app_trans_id", app_trans_id);
-            param.Add("embed_data", JsonConvert.SerializeObject(""));
+            param.Add("app_trans_id", app_trans_id); // mã giao dich có định dạng yyMMdd_xxxx
+            param.Add("embed_data", JsonConvert.SerializeObject(embed_data));
             param.Add("item", JsonConvert.SerializeObject(items));
-            param.Add("callback_url", _zaloPaySettings.CallbackUrl!);
             param.Add("description", description + app_trans_id);
-            param.Add("bank_code", "");
+            param.Add("bank_code", "zalopayapp");
 
             var data = _zaloPaySettings.Appid + "|" + param["app_trans_id"] + "|" + param["app_user"] + "|" + param["amount"] + "|"
                         + param["app_time"] + "|" + param["embed_data"] + "|" + param["item"];
-            param.Add("mac", HmacHelper.Compute(ZaloPayHMAC.HMACSHA256, _zaloPaySettings.Key1, data));
+            param.Add("mac", HmacHelper.Compute(ZaloPayHMAC.HMACSHA256, _zaloPaySettings.Key1!, data));
 
-            var result = await HttpHelper.PostFormAsync(_zaloPaySettings.CreateOrderUrl, param);
+            var result = await HttpHelper.PostFormAsync(_zaloPaySettings.CreateOrderUrl!, param);
             return result;
         }
 
@@ -65,7 +70,7 @@ namespace MobileProgramming.Data.ExternalServices.Payment.ZaloPay
         {
             var param = new Dictionary<string, string>
                 {
-                    { "app_id", _zaloPaySettings.Appid! },
+                    { "app_id", "533" },
                     { "app_trans_id", appTransId}
                 };
 
