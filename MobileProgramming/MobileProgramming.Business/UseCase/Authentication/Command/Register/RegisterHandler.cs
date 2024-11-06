@@ -61,7 +61,7 @@ public class RegisterHandler : IRequestHandler<RegisterCommand, APIResponse>
                 if (await _unitOfWork.SaveChangesAsync() > 0)
                 {
                     UserInfoResponseDto user = _mapper.Map<UserInfoResponseDto>(newUser);
-                    user.AccessToken = await _jwtProvider.GenerateAccessToken(user.Email);
+                    user.AccessToken = await _jwtProvider.GenerateAccessToken(user.Username);
                     return new APIResponse
                     {
                         StatusResponse = HttpStatusCode.OK,
