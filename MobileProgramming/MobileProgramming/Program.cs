@@ -3,8 +3,8 @@ using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.OpenApi.Models;
 using MobileProgramming.API;
-using MobileProgramming.API.Hubs;
 using MobileProgramming.Business;
+using MobileProgramming.Business.Hub;
 using MobileProgramming.Data.Configuration;
 using MobileProgramming.Data.Persistence;
 using Serilog;
@@ -97,5 +97,7 @@ app.MapHealthChecks("/h", new HealthCheckOptions
 });
 app.ConfigureExceptionHandler();
 app.MapHub<ChatHub>("/chat-hub");
+app.MapHub<NotificationHub>("/notification-hub");
+
 
 app.Run();

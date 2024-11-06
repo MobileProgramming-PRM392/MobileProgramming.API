@@ -3,6 +3,7 @@ using MobileProgramming.Business.Models.DTO;
 using MobileProgramming.Business.Models.DTO.CartItems;
 using MobileProgramming.Business.Models.DTO.Category;
 using MobileProgramming.Business.Models.DTO.Chat;
+using MobileProgramming.Business.Models.DTO.Order;
 using MobileProgramming.Business.Models.DTO.Product;
 using MobileProgramming.Business.Models.DTO.User;
 using MobileProgramming.Business.Models.DTO.User.ResponseDto;
@@ -40,6 +41,16 @@ namespace MobileProgramming.Business.Configuration
 
             //chat
             CreateMap<SendMessageDto, ChatMessage>().ReverseMap();
+
+            //order
+            CreateMap<Order, OrderDto>();
+                //.ForMember(dest => dest.Cart, opt => opt.MapFrom(src => src.Cart));
+
+            // Map Cart entity to CartDto
+            CreateMap<Cart, CartOrderDto>();
+
+            // Map CartItem entity to CartItemDto
+            CreateMap<CartItem, CartOrderItemDto>();
         }
     }
 }

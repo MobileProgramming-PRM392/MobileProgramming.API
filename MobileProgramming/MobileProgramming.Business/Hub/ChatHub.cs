@@ -6,7 +6,7 @@ using MobileProgramming.Data.Interfaces;
 using MobileProgramming.Data.Interfaces.Common;
 using Newtonsoft.Json;
 
-namespace MobileProgramming.API.Hubs;
+namespace MobileProgramming.Business.Hub;
 
 
 
@@ -14,13 +14,13 @@ public interface IChatHub
 {
     Task SendChatMessages(ChatDto dto);
 }
-public class ChatHub: Hub
+public class ChatHub : Microsoft.AspNetCore.SignalR.Hub
 {
     private readonly IChatMessageRepository _messageRepository;
     private readonly IUserRepository _userRepo;
     private readonly IMapper _mapper;
     private readonly IUnitOfWork _unitOfWork;
-    public ChatHub(IChatMessageRepository messageRepository, IUserRepository userRepo, 
+    public ChatHub(IChatMessageRepository messageRepository, IUserRepository userRepo,
         IMapper mapper, IUnitOfWork unitOfWork)
     {
         _messageRepository = messageRepository;
@@ -30,7 +30,7 @@ public class ChatHub: Hub
     }
     public override async Task OnConnectedAsync()
     {
-        await Clients.All.SendAsync("connection check",$"connection estabished: {Context.ConnectionId}");
+        await Clients.All.SendAsync("connection check", $"connection estabished: {Context.ConnectionId}");
     }
     public async Task SendMessageChatTest(string messageDto)
     {
@@ -42,7 +42,7 @@ public class ChatHub: Hub
         message.Message = temp[2];
         await Groups.AddToGroupAsync(Context.ConnectionId, temp[3]);
         await _messageRepository.Add(message);
-        if(await _unitOfWork.SaveChangesAsync() > 0)
+        if (await _unitOfWork.SaveChangesAsync() > 0)
         {
             UserInfoDto sendFrom = _mapper.Map<UserInfoDto>(await _userRepo.GetById(message.UserId!));
             UserInfoDto sendTo = _mapper.Map<UserInfoDto>(await _userRepo.GetById(message.SendTo));
@@ -54,8 +54,8 @@ public class ChatHub: Hub
                 Message = message.Message,
                 SentAt = message.SentAt,
             };
-            
-            await Clients.All.SendAsync("Received-message", JsonConvert.SerializeObject(chatMessage)); 
+
+            await Clients.All.SendAsync("Received-message", JsonConvert.SerializeObject(chatMessage));
         }
     }
     public async Task SendPrivateMessageChatTest(string messageDto)

@@ -17,6 +17,7 @@ namespace MobileProgramming.Business.Models.DTO
         public decimal TotalPrice { get; set; }
 
         public string Status { get; set; } = null!;
+
         public virtual ICollection<CartItemDto> CartItems { get; set; } = new List<CartItemDto>();
     }
 }
