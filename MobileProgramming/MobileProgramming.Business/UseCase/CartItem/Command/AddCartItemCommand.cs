@@ -11,10 +11,10 @@ namespace MobileProgramming.Business.UseCase
     public class AddCartItemCommand : IRequest<APIResponse>
     {
         public int UserId { get; set; }
-        public int ProductId { get; set; }
-        public int Quantity { get; set; }
+        public List<int> ProductId { get; set; }
+        public List<int> Quantity { get; set; }
 
-        public AddCartItemCommand(int userId, int productId, int quantity)
+        public AddCartItemCommand(int userId, List<int> productId, List<int> quantity)
         {
             UserId = userId;
             ProductId = productId;

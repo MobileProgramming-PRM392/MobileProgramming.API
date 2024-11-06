@@ -4,15 +4,10 @@ using MobileProgramming.Business.Models.DTO;
 using MobileProgramming.Business.Models.Response;
 using MobileProgramming.Business.Models.ResponseMessage;
 using MobileProgramming.Data.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MobileProgramming.Business.UseCase
-{ 
+{
     public class GetCartByUserIdQueryHandler : IRequestHandler<GetCartByUserIdQuery, APIResponse>
     {
         private readonly ICartRepository _cartRepository;
