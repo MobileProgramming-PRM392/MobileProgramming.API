@@ -3,6 +3,7 @@ using MobileProgramming.Data.Entities;
 using MobileProgramming.Data.Generic;
 using MobileProgramming.Data.Interfaces;
 using MobileProgramming.Data.Persistence;
+using System.Drawing.Printing;
 
 namespace MobileProgramming.Data.Repository;
 
@@ -38,8 +39,45 @@ public class ChatMessageRepository : RepositoryBase<ChatMessage>, IChatMessageRe
         response.AddRange(chatHistory2);
         return response.OrderBy(p => p.SentAt).ToList();
     }
-    /*public async Task<ChatMessage?> GetChatDetail(int id)
-{
-   return await _context.ChatMessages.Include(c => c.User).FirstOrDefaultAsync(c => c.ChatMessageId == id);
-}*/
+    public async Task<List<ChatMessage>> GetUserChatHistory(int userId, DateTime? filter)
+    {
+        var userMessage = await _context.ChatMessages
+        .Where(c => c.UserId == userId || c.SendTo == userId)
+        .ToListAsync();
+        if (filter.HasValue)
+        {
+            userMessage = userMessage.Where(u => u.SentAt >= filter.Value).ToList();
+        }
+        return userMessage.OrderByDescending(p => p.SentAt).ToList();
+    }
+    /*public async Task<Dictionary<int, ChatMessage>> GetAdminChatHistory(int userId)
+    {
+        
+        var adminMessage = await _context.ChatMessages.Where(c => c.UserId == userId).ToListAsync();
+        List<int> sendTo = adminMessage.Select(p => p.SendTo).Distinct().ToList();
+        var groupedMessages = adminMessage
+        .GroupBy(msg => msg.SendTo)
+        .OrderByDescending(g => g.Count())
+        .Select(g => g.First())
+        .ToDictionary(g => g.SendTo, g => g);
+
+        return groupedMessages;
+    }*/
+    public async Task<List<List<ChatMessage>>> GetAdminChatHistory(int userId, int page, int pageSize)
+    {
+
+        var adminMessage = await _context.ChatMessages.Where(c => c.UserId == userId).ToListAsync();
+        List<int> sendTo = adminMessage.OrderByDescending(p => p.SentAt).Select(p => p.SendTo).Distinct().ToList();
+
+        List<List<ChatMessage>> response = new List<List<ChatMessage>>();
+        foreach(int id in sendTo){
+            List<ChatMessage> tmp = adminMessage.Where(c => c.SendTo == id).ToList();
+            List<ChatMessage> res = _context.ChatMessages.Where(c => c.UserId == id && c.SendTo == userId).ToList();
+            tmp.AddRange(res);
+            tmp = tmp.OrderByDescending(p => p.SentAt).ToList();
+            response.Add(tmp);
+        }
+
+        return response;
+    }
 }
