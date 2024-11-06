@@ -5,6 +5,7 @@ using MobileProgramming.Business.Models.Response;
 using MobileProgramming.Business.UseCase.Notification.Commands.CreateNotification;
 using MobileProgramming.Data.Interfaces;
 using MobileProgramming.Data.Interfaces.Common;
+using Newtonsoft.Json;
 using System.Net;
 
 namespace MobileProgramming.Business.UseCase.Order.Commands.CreateOrder
@@ -68,23 +69,23 @@ namespace MobileProgramming.Business.UseCase.Order.Commands.CreateOrder
             await _orderRepository.Add(order);
             await _unitOfWork.SaveChangesAsync();
 
-            // Send a notification command using MediatR
+            var notification = new Data.Entities.Notification
+            {
+                UserId = order.UserId,
+                Message = "Your order has been placed successfully!",
+                CreatedAt = DateTime.UtcNow,
+                IsRead = false
+            };
+
             var notificationResponse = await _mediator.Send(new CreateNotification
             {
-                UserId = request.UserId,
+                UserId = (int)order.UserId,
                 Message = "Your order has been created successfully."
             });
 
-            // Prepare notification for SignalR
-            var notificationMessage = new
-            {
-                Title = "Order Created",
-                Content = notificationResponse.Message,
-                Timestamp = DateTime.UtcNow
-            };
 
             await _hubContext.Clients.User(request.UserId.ToString())
-                .SendAsync("ReceiveNotification", notificationMessage);
+                .SendAsync("ReceiveNotification", JsonConvert.SerializeObject(notification, Formatting.Indented));
 
             return new APIResponse
             {

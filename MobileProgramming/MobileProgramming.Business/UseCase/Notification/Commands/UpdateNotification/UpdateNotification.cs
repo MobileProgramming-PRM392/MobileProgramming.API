@@ -6,6 +6,12 @@ namespace MobileProgramming.Business.UseCase.Notification.Commands.UpdateNotific
     public class UpdateNotification : IRequest<APIResponse>
     {
         public int NotificationId { get; set; }
+
+        public UpdateNotification(int notificationId)
+        {
+            NotificationId = notificationId;
+        }
         //public int UserId { get; set; }
+
     }
 }
