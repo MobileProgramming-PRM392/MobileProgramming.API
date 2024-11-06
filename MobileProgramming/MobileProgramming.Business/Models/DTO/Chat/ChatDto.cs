@@ -8,12 +8,13 @@ namespace MobileProgramming.Business.Models.DTO.Chat;
 
 public class ChatDto
 {
+    public string ConversationId { get; set; } = string.Empty;
     public int ChatMessageId { get; set; }
 
-    public UserInfoDto SendFrom { get; set; } = new UserInfoDto();
+    public int SenderId { get; set; } 
 
     public string? Message { get; set; }
 
     public DateTime SentAt { get; set; }
-    public UserInfoDto SendTo { get; set; } = new UserInfoDto();
+    
 }

@@ -44,13 +44,11 @@ public class ChatHub : Microsoft.AspNetCore.SignalR.Hub
         await _messageRepository.Add(message);
         if (await _unitOfWork.SaveChangesAsync() > 0)
         {
-            UserInfoDto sendFrom = _mapper.Map<UserInfoDto>(await _userRepo.GetById(message.UserId!));
-            UserInfoDto sendTo = _mapper.Map<UserInfoDto>(await _userRepo.GetById(message.SendTo));
+            
             ChatDto chatMessage = new ChatDto
             {
                 ChatMessageId = message.ChatMessageId,
-                SendFrom = sendFrom,
-                SendTo = sendTo,
+                SenderId = message.UserId.Value,
                 Message = message.Message,
                 SentAt = message.SentAt,
             };
@@ -70,15 +68,13 @@ public class ChatHub : Microsoft.AspNetCore.SignalR.Hub
         await _messageRepository.Add(message);
         if (await _unitOfWork.SaveChangesAsync() > 0)
         {
-            UserInfoDto sendFrom = _mapper.Map<UserInfoDto>(await _userRepo.GetById(message.UserId!));
-            UserInfoDto sendTo = _mapper.Map<UserInfoDto>(await _userRepo.GetById(message.SendTo));
+            
             ChatDto chatMessage = new ChatDto
             {
                 ChatMessageId = message.ChatMessageId,
-                SendFrom = sendFrom,
-                SendTo = sendTo,
+                SenderId = message.UserId.Value,
                 Message = message.Message,
-                SentAt = message.SentAt,
+                SentAt = message.SentAt
             };
             await Clients.Group(temp[3]).SendAsync("Received-message", JsonConvert.SerializeObject(chatMessage));
         }
@@ -86,18 +82,18 @@ public class ChatHub : Microsoft.AspNetCore.SignalR.Hub
     public async Task SendMessageChat(SendMessageDto dto)
     {
         var message = CreateChatMessage(dto);
-        await Groups.AddToGroupAsync(Context.ConnectionId, dto.RoomNo.ToString());
+        //await Groups.AddToGroupAsync(Context.ConnectionId, dto.RoomNo.ToString());
         await _messageRepository.Add(message);
 
         if (await _unitOfWork.SaveChangesAsync() > 0)
         {
             var sendFrom = _mapper.Map<UserInfoDto>(await _userRepo.GetById(message.UserId!));
-            var chatMessage = await CreateChatDto(message, sendFrom);
+            var chatMessage = CreateChatDto(message, sendFrom);
             await Clients.All.SendAsync("Received-message", chatMessage/*JsonConvert.SerializeObject(chatMessage)*/);
         }
     }
 
-    public async Task SendPrivateMessageChat(SendMessageDto dto)
+   /* public async Task SendPrivateMessageChat(SendMessageDto dto)
     {
         var message = CreateChatMessage(dto);
         await Groups.AddToGroupAsync(Context.ConnectionId, dto.RoomNo.ToString());
@@ -107,9 +103,9 @@ public class ChatHub : Microsoft.AspNetCore.SignalR.Hub
         {
             var sendFrom = _mapper.Map<UserInfoDto>(await _userRepo.GetById(message.UserId!));
             var chatMessage = await CreateChatDto(message, sendFrom);
-            await Clients.Group(dto.RoomNo.ToString()).SendAsync("Received-message", chatMessage/*JsonConvert.SerializeObject(chatMessage)*/);
+            await Clients.Group(dto.RoomNo.ToString()).SendAsync("Received-message", chatMessage*//*JsonConvert.SerializeObject(chatMessage)*//*);
         }
-    }
+    }*/
 
     private ChatMessage CreateChatMessage(SendMessageDto dto)
     {
@@ -120,13 +116,13 @@ public class ChatHub : Microsoft.AspNetCore.SignalR.Hub
             Message = dto.Message
         };
     }
-    private async Task<ChatDto> CreateChatDto(ChatMessage message, UserInfoDto sendFrom)
+    private ChatDto CreateChatDto(ChatMessage message, UserInfoDto sendFrom)
     {
         return new ChatDto
         {
+            ConversationId = "",
             ChatMessageId = message.ChatMessageId,
-            SendFrom = sendFrom,
-            SendTo = _mapper.Map<UserInfoDto>(await _userRepo.GetById(message.SendTo)),
+            SenderId = sendFrom.UserId,
             Message = message.Message,
             SentAt = message.SentAt,
         };

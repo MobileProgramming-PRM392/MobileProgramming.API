@@ -79,7 +79,7 @@ public class RegisterHandler : IRequestHandler<RegisterCommand, APIResponse>
             return new APIResponse
             {
                 StatusResponse = HttpStatusCode.BadRequest,
-                Message = MessageCommon.CreateFailed,
+                Message = MessageCommon.UsernameInvalid,
                 Data = null
             };
         }

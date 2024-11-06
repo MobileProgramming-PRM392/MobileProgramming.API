@@ -30,7 +30,17 @@ public class UserChatHistoryHandler : IRequestHandler<UserChatHistoryCommand, AP
         List<ChatMessage> chatMessages = await _chatMessageRepository.GetUserChatHistory(request.UserId, request.Filter);
         if (chatMessages.Any())
         {
-            List<ChatDto> response = await toDto(chatMessages);
+            ConversationDto response = new ConversationDto();
+            ChatMessage message = chatMessages.FirstOrDefault()!;
+            UserInfoDto participant = _mapper.Map<UserInfoDto>(await _userRepo.GetById(message.UserId!));
+            UserInfoDto participant2 = _mapper.Map<UserInfoDto>(await _userRepo.GetById(message.SendTo!));
+
+            response.Participants.Add(participant);
+            response.Participants.Add(participant2);
+            string conversationId = $"conversation@{participant.Username}-{participant.UserId}";
+            response.ConversationId = conversationId;
+            response.Chats = toDto(chatMessages, conversationId);
+            response.LastMessageTimestamp = response.Chats.FirstOrDefault()!.SentAt;
             return new APIResponse
             {
                 StatusResponse = System.Net.HttpStatusCode.OK,
@@ -45,17 +55,17 @@ public class UserChatHistoryHandler : IRequestHandler<UserChatHistoryCommand, AP
             Data = new List<ChatMessage>()
         };
     }
-    private async Task<List<ChatDto>> toDto(List<ChatMessage> chatMessages)
+    private List<ChatDto> toDto(List<ChatMessage> chatMessages, string conversationId)
     {
         List<ChatDto> response = new List<ChatDto>();
         foreach (ChatMessage chatMessage in chatMessages)
         {
             ChatDto dto = new ChatDto();
+            dto.ConversationId = conversationId;
             dto.ChatMessageId = chatMessage.ChatMessageId;
             dto.Message = chatMessage.Message;
             dto.SentAt = chatMessage.SentAt;
-            dto.SendFrom = _mapper.Map<UserInfoDto>(await _userRepo.GetById(chatMessage.UserId!));
-            dto.SendTo = _mapper.Map<UserInfoDto>(await _userRepo.GetById(chatMessage.SendTo));
+            dto.SenderId = chatMessage.UserId!.Value;
             response.Add(dto);
         }
         return response;
