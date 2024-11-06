@@ -38,14 +38,16 @@ public class AdminChatHistoryHandler : IRequestHandler<AdminChatHistoryCommand, 
                 ChatMessage message = chatMessage.FirstOrDefault()!;
                 UserInfoDto participant = _mapper.Map<UserInfoDto>(await _userRepo.GetById(message.UserId!));
                 UserInfoDto participant2 = _mapper.Map<UserInfoDto>(await _userRepo.GetById(message.SendTo!));
-                temp.Chats = toDto(chatMessage);
-                temp.LastMessageTimestamp = temp.Chats.FirstOrDefault()!.SentAt;
+                
                 temp.Participants.Add(participant);
                 temp.Participants.Add(participant2);
-                temp.ConversationId = $"conversation@{participant2.Username}{participant2.UserId}";
+                string conversationId = $"conversation@{participant.Username}-{participant2.Username}";
+                temp.ConversationId = conversationId;
+                temp.Chats = toDto(chatMessage, conversationId);
+                temp.LastMessageTimestamp = temp.Chats.FirstOrDefault()!.SentAt;
                 response.Add(temp);
             }
-            
+            response = response.OrderByDescending(r => r.LastMessageTimestamp).ToList();
             return new APIResponse
             {
                 StatusResponse = System.Net.HttpStatusCode.OK,
@@ -60,12 +62,13 @@ public class AdminChatHistoryHandler : IRequestHandler<AdminChatHistoryCommand, 
             Data = new List<ChatMessage>()
         };
     }
-    private List<ChatDto> toDto(List<ChatMessage> chatMessages)
+    private List<ChatDto> toDto(List<ChatMessage> chatMessages, string conversationId)
     {
         List<ChatDto> response = new List<ChatDto>();
         foreach (ChatMessage chatMessage in chatMessages)
         {
             ChatDto dto = new ChatDto();
+            dto.ConversationId = conversationId;
             dto.ChatMessageId = chatMessage.ChatMessageId;
             dto.Message = chatMessage.Message;
             dto.SentAt = chatMessage.SentAt;

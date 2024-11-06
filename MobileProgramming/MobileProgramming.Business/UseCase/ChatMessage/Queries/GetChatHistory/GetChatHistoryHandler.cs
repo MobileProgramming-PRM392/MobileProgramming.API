@@ -50,8 +50,7 @@ internal class GetChatHistoryHandler : IRequestHandler<GetChatHistoryQuery, APIR
             dto.ChatMessageId = chatMessage.ChatMessageId;
             dto.Message = chatMessage.Message;
             dto.SentAt = chatMessage.SentAt;
-            dto.SendFrom = _mapper.Map<UserInfoDto>(await _userRepo.GetById(chatMessage.UserId!));
-            dto.SendTo = _mapper.Map<UserInfoDto>(await _userRepo.GetById(chatMessage.SendTo));
+            dto.SenderId = chatMessage.UserId.Value;
             response.Add(dto);
         }
         return response;
