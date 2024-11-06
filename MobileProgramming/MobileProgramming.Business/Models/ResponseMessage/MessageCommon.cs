@@ -31,5 +31,6 @@ namespace MobileProgramming.Business.Models.ResponseMessage
         public const string Unauthorized = "UNAUTHORIZED";
         public const string Blocked = "USER_BLOCKED";
         public const string InvalidToken = "INVALID_TOKEN";
+        public const string LogInFailed = "Invalid username or password";
     }
 }

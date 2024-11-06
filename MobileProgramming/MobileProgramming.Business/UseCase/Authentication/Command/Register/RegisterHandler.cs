@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Infrastructure.ExternalServices.Authentication;
 using MediatR;
+using MobileProgramming.Business.Models.DTO.User.ResponseDto;
 using MobileProgramming.Business.Models.Enum;
 using MobileProgramming.Business.Models.Response;
 using MobileProgramming.Business.Models.ResponseMessage;
@@ -49,12 +50,13 @@ public class RegisterHandler : IRequestHandler<RegisterCommand, APIResponse>
                 await _userRepository.Add(newUser);
                 if (await _unitOfWork.SaveChangesAsync() > 0)
                 {
-
+                    UserInfoResponseDto user = _mapper.Map<UserInfoResponseDto>(newUser);
+                    user.AccessToken = await _jwtProvider.GenerateAccessToken(user.Email);
                     return new APIResponse
                     {
                         StatusResponse = HttpStatusCode.OK,
                         Message = MessageCommon.CreateSuccesfully,
-                        Data = null
+                        Data = user
                     };
                 }
                 return new APIResponse

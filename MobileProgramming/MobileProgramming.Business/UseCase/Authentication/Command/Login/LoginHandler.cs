@@ -32,8 +32,8 @@ public class LoginHandler : IRequestHandler<LoginCommand, APIResponse>
             {
                 return new APIResponse
                 {
-                    StatusResponse = HttpStatusCode.Unauthorized,
-                    Message = MessageCommon.Unauthorized,
+                    StatusResponse = HttpStatusCode.BadRequest,
+                    Message = MessageCommon.LogInFailed,
                     Data = null
                 };
             }
@@ -44,8 +44,8 @@ public class LoginHandler : IRequestHandler<LoginCommand, APIResponse>
             {
                 return new APIResponse
                 {
-                    StatusResponse = HttpStatusCode.Unauthorized,
-                    Message = MessageCommon.Unauthorized,
+                    StatusResponse = HttpStatusCode.BadRequest,
+                    Message = MessageCommon.LogInFailed,
                     Data = null
                 };
             }
@@ -62,8 +62,8 @@ public class LoginHandler : IRequestHandler<LoginCommand, APIResponse>
         {
             return new APIResponse
             {
-                StatusResponse = HttpStatusCode.Unauthorized,
-                Message = MessageCommon.Unauthorized,
+                StatusResponse = HttpStatusCode.BadRequest,
+                Message = MessageCommon.ServerError,
                 Data = ex.Message
             };
         }
