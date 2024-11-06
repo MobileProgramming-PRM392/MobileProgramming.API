@@ -16,6 +16,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Infrastructure.ExternalServices.Authentication;
 using MobileProgramming.Data.ExternalServices.UploadFile;
+using MobileProgramming.Data.ExternalServices.Payment.ZaloPay;
+using MobileProgramming.Data.ExternalServices.Payment.ZaloPay.Setting;
 
 
 namespace MobileProgramming.Data.Configuration
@@ -26,6 +28,7 @@ namespace MobileProgramming.Data.Configuration
         {
             services.Configure<RedisSetting>(configuration.GetSection("Redis"));
             services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
+            services.Configure<ZaloPaySetting>(configuration.GetSection("ZaloPay"));
             //Add DBcontext
             services.AddDbContext<SaleProductDbContext>((sp, options) =>
             {
@@ -106,8 +109,11 @@ namespace MobileProgramming.Data.Configuration
             services.AddScoped<ICartRepository, CartRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IChatMessageRepository, ChatMessageRepository>();
+            services.AddScoped<INotificationRepository, NotificationRepository>();
+            services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<IJwtProvider, JwtProvider>();
             services.AddScoped<IImageService, ImageService>();
+            services.AddScoped<IZaloPayService, ZaloPayService>();
             return services;
 
 
