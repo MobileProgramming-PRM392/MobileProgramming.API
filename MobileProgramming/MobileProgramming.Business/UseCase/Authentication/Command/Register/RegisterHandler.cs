@@ -37,8 +37,18 @@ public class RegisterHandler : IRequestHandler<RegisterCommand, APIResponse>
     {
         try
         {
-            var userExist = await _userRepository.GetUserByUsernameAsync(request.User.Username);
-            if (userExist == null)
+            var emailcheck = await _userRepository.GetUserByEmailAsync(request.User.Email!);
+            if (emailcheck != null)
+            {
+                return new APIResponse
+                {
+                    StatusResponse = HttpStatusCode.BadRequest,
+                    Message = MessageCommon.EmailAlreadyExist,
+                    Data = null
+                };
+            }
+                var userExist = await _userRepository.GetUserByUsernameAsync(request.User.Username);
+            if (userExist == null && emailcheck == null)
             {
                 User newUser = _mapper.Map<User>(request.User);
                 newUser.Role = UserRole.User.ToString();

@@ -50,7 +50,7 @@ public class LoginHandler : IRequestHandler<LoginCommand, APIResponse>
                 };
             }
             UserInfoResponseDto user = _mapper.Map<UserInfoResponseDto>(existUser);
-            user.AccessToken = await _jwtProvider.GenerateAccessToken(user.Email);
+            user.AccessToken = await _jwtProvider.GenerateAccessToken(user.Username);
             return new APIResponse
             {
                 StatusResponse = HttpStatusCode.OK,

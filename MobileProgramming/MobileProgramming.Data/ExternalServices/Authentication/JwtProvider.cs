@@ -27,7 +27,7 @@ namespace Infrastructure.ExternalServices.Authentication
         public async Task<string> GenerateAccessToken(string email)
         {
 
-            var existUser = await _userRepository.GetUserByEmailAsync(email);
+            var existUser = await _userRepository.GetUserByUsernameAsync(email);
             if (existUser == null)
             {
                 return "Error! Unauthorized.";
