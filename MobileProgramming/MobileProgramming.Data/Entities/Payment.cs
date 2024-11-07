@@ -5,7 +5,7 @@ namespace MobileProgramming.Data.Entities;
 
 public partial class Payment
 {
-    public int PaymentId { get; set; }
+    public string PaymentId { get; set; } = string.Empty;
 
     public int? OrderId { get; set; }
 

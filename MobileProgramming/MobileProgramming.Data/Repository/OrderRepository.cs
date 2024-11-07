@@ -15,6 +15,23 @@ namespace MobileProgramming.Data.Repository
             _context = context;
         }
 
+        public async Task<Order?> GetByIdAsync(int orderId)
+        {
+            return await _context.Orders
+                .Include(o => o.Payments)
+                .Include(o => o.Cart)
+                    .ThenInclude(c => c.CartItems)
+                    .ThenInclude(ci => ci.Product)
+                .AsSplitQuery()
+                .FirstOrDefaultAsync(o => o.OrderId == orderId);
+        }
+
+
+        public async Task<int> CountOrdersAsync()
+        {
+            return await _context.Orders.CountAsync();
+        }
+
         public async Task<IEnumerable<Order>> FilterOrders(
             int? orderId = null,
             int? userId = null,
@@ -23,7 +40,7 @@ namespace MobileProgramming.Data.Repository
             DateTime? startDate = null,
             DateTime? endDate = null)
         {
-            var query = _context.Orders.Include(c => c.Cart).ThenInclude(c => c.CartItems).AsQueryable();
+            var query = _context.Orders.Include(c => c.Cart).ThenInclude(c => c.CartItems).ThenInclude(c => c.Product).AsQueryable();
 
             if (orderId.HasValue)
             {

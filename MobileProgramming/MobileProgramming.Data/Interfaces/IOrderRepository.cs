@@ -5,6 +5,8 @@ namespace MobileProgramming.Data.Interfaces
 {
     public interface IOrderRepository : IRepository<Order>
     {
+        Task<Order?> GetByIdAsync(int orderId);
+        Task<int> CountOrdersAsync();
         Task<IEnumerable<Order>> FilterOrders(
             int? orderId = null,
             int? userId = null,

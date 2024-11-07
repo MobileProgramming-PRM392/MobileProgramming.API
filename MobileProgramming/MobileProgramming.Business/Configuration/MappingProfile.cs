@@ -42,15 +42,29 @@ namespace MobileProgramming.Business.Configuration
             //chat
             CreateMap<SendMessageDto, ChatMessage>().ReverseMap();
 
-            //order
             CreateMap<Order, OrderDto>();
-                //.ForMember(dest => dest.Cart, opt => opt.MapFrom(src => src.Cart));
+
+
+            
 
             // Map Cart entity to CartDto
             CreateMap<Cart, CartOrderDto>();
 
             // Map CartItem entity to CartItemDto
-            CreateMap<CartItem, CartOrderItemDto>();
+            CreateMap<CartItem, CartOrderItemDto>()
+                .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.Product.ProductName))
+                .ForMember(dest => dest.ProductDescription, opt => opt.MapFrom(src => src.Product.BriefDescription))
+                .ForMember(dest => dest.ProductPrice, opt => opt.MapFrom(src => src.Product.Price));
+
+            CreateMap<Payment, PaymentDto>()
+                .ForMember(dest => dest.OrderId, opt => opt.MapFrom(src => src.Order.OrderId))
+                .ForMember(dest => dest.CartId, opt => opt.MapFrom(src => src.Order.CartId))
+                .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.Order.UserId))
+                .ForMember(dest => dest.PaymentMethod, opt => opt.MapFrom(src => src.Order.PaymentMethod))
+                .ForMember(dest => dest.BillingAddress, opt => opt.MapFrom(src => src.Order.BillingAddress))
+                .ForMember(dest => dest.OrderStatus, opt => opt.MapFrom(src => src.Order.OrderStatus))
+                .ForMember(dest => dest.OrderDate, opt => opt.MapFrom(src => src.Order.OrderDate))
+                .ForMember(dest => dest.Cart, opt => opt.MapFrom(src => src.Order.Cart));
         }
     }
 }
