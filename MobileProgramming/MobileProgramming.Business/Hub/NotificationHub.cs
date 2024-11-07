@@ -2,11 +2,18 @@
 
 namespace MobileProgramming.Business.Hub
 {
-    public class NotificationHub : Microsoft.AspNetCore.SignalR.Hub
+    public class NotificationHub : Microsoft.AspNetCore.SignalR.Hub<INotificationClient>
     {
-        //public async Task SendNotification(string userId, object message)
-        //{
-        //    await Clients.User(userId).SendAsync("ReceiveNotification", message);
-        //}
+        public override async Task OnConnectedAsync()
+        {
+            await Clients.Client(Context.ConnectionId).ReceiveNotification($"Thank you connecting {Context.ConnectionId}");
+
+            await base.OnConnectedAsync();
+        }
+    }
+
+    public interface INotificationClient
+    {
+        Task ReceiveNotification(object message);
     }
 }

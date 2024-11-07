@@ -51,26 +51,25 @@ namespace MobileProgramming.Business.UseCase
 
             var cartItems = new List<CartItem>();
             var existedCart = await _cartRepository.GetActiveCartByUserIdAsync(request.UserId);
-            for (int i = 0; i < request.ProductId.Count; i++)
+
+            foreach (var item in request.CartItems)
             {
-                var product = await _productRepository.GetById(request.ProductId[i]);
+                var product = await _productRepository.GetById(item.ProductId);
                 var cartItem = new CartItem
                 {
-                    CartId = existedCart.CartId,
-                    ProductId = request.ProductId[i],
-                    Quantity = request.Quantity[i],
-                    Price = product.Price * request.Quantity[i]
-
+                    CartId = existedCart!.CartId,
+                    ProductId = item.ProductId,
+                    Quantity = item.Quantity,
+                    Price = product!.Price * item.Quantity
                 };
+
                 existedCart.TotalPrice += cartItem.Price;
                 cartItems.Add(cartItem);
             }
 
-            // Add all cart items to the repository
             foreach (var item in cartItems)
             {
                 await _cartItemRepository.Add(item);
-                
             }
             await _unitOfWork.SaveChangesAsync();
 
