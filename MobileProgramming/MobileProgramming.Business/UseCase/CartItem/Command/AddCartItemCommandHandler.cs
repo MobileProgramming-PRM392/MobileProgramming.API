@@ -32,56 +32,98 @@ namespace MobileProgramming.Business.UseCase
             var response = new APIResponse();
             var cart = await _cartRepository.GetActiveCartByUserIdAsync(request.UserId);
 
-            if (cart == null)
+            if (cart != null)
             {
-                cart = new Cart
-                {
-                    UserId = request.UserId,
-                    Status = "active",
-                    TotalPrice = 0 // Will update after adding items
-                };
-
-                await _cartRepository.Add(cart);
+                await _cartRepository.Delete(cart.CartId);
                 await _unitOfWork.SaveChangesAsync();
             }
 
-            var cartItem = await _cartItemRepository.GetCartItemAsync(cart.CartId, request.ProductId);
-
-
-            var product = await _productRepository.GetById(request.ProductId);
-            if (product == null)
+            var newCart = new Cart
             {
-                response.StatusResponse = HttpStatusCode.NotFound;
-                response.Message = MessageProduct.ProductNotFound;
-                response.Data = false;
-            }
+                UserId = request.UserId,
+                Status = "active",
+                TotalPrice = 0 // Will update after adding items
+            };
+
+            await _cartRepository.Add(newCart);
+            await _unitOfWork.SaveChangesAsync();
 
 
-            if (cartItem != null)
+            var cartItems = new List<CartItem>();
+            var existedCart = await _cartRepository.GetActiveCartByUserIdAsync(request.UserId);
+            for (int i = 0; i < request.ProductId.Count; i++)
             {
-                
-                cartItem.Quantity += request.Quantity;
-               
-            }
-            else
-            {
-                
-                cartItem = new CartItem
+                var product = await _productRepository.GetById(request.ProductId[i]);
+                var cartItem = new CartItem
                 {
-                    CartId = cart.CartId,
-                    ProductId = request.ProductId,
-                    Quantity = request.Quantity,
-                    Price = product.Price 
-                };
+                    CartId = existedCart.CartId,
+                    ProductId = request.ProductId[i],
+                    Quantity = request.Quantity[i],
+                    Price = product.Price * request.Quantity[i]
 
-                await _cartItemRepository.Add(cartItem);
-                await _unitOfWork.SaveChangesAsync();
+                };
+                existedCart.TotalPrice += cartItem.Price;
+                cartItems.Add(cartItem);
             }
 
-            var finalCartItem = _mapper.Map<CartItemDto>(cartItem);
+            // Add all cart items to the repository
+            foreach (var item in cartItems)
+            {
+                await _cartItemRepository.Add(item);
+                
+            }
+            await _unitOfWork.SaveChangesAsync();
+
+            //if (cart == null)
+            //{
+            //    cart = new Cart
+            //    {
+            //        UserId = request.UserId,
+            //        Status = "active",
+            //        TotalPrice = 0 // Will update after adding items
+            //    };
+
+            //    await _cartRepository.Add(cart);
+            //    await _unitOfWork.SaveChangesAsync();
+            //}
+
+            //var cartItem = await _cartItemRepository.GetCartItemAsync(cart.CartId, request.ProductId);
+
+
+            //var product = await _productRepository.GetById(request.ProductId);
+            //if (product == null)
+            //{
+            //    response.StatusResponse = HttpStatusCode.NotFound;
+            //    response.Message = MessageProduct.ProductNotFound;
+            //    response.Data = false;
+            //}
+
+
+            //if (cartItem != null)
+            //{
+
+            //    cartItem.Quantity += request.Quantity;
+
+            //}
+            //else
+            //{
+
+            //    cartItem = new CartItem
+            //    {
+            //        CartId = cart.CartId,
+            //        ProductId = request.ProductId,
+            //        Quantity = request.Quantity,
+            //        Price = product.Price 
+            //    };
+
+            //    await _cartItemRepository.Add(cartItem);
+            //    await _unitOfWork.SaveChangesAsync();
+            //}
+
+            //var finalCartItem = _mapper.Map<CartItemDto>(cartItem);
             response.StatusResponse = HttpStatusCode.OK;
             response.Message = MessageCommon.SavingSuccesfully;
-            response.Data = finalCartItem;
+            response.Data = request;
 
             return response;
         }

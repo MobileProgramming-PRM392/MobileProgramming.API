@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using MobileProgramming.Business.UseCase.Order.Commands.CreateOrder;
 using MobileProgramming.Business.UseCase.Order.Queries.GetOrder;
 using MobileProgramming.Business.UseCase.Order.Queries.QueryOrder;
+using MobileProgramming.Business.UseCase.Payment.Query.GetFilterPayment;
 using System.Net;
 
 namespace MobileProgramming.API.Controllers
@@ -27,6 +28,13 @@ namespace MobileProgramming.API.Controllers
 
         [HttpGet("")]
         public async Task<IActionResult> GetOrder([FromQuery] GetOrderQuery query, CancellationToken token = default)
+        {
+            var result = await _mediator.Send(query, token);
+            return (result.StatusResponse == HttpStatusCode.OK) ? Ok(result) : StatusCode((int)result.StatusResponse, result);
+        }
+
+        [HttpGet("billing")]
+        public async Task<IActionResult> GetPayment([FromQuery] GetFilterPaymentQuery query, CancellationToken token = default)
         {
             var result = await _mediator.Send(query, token);
             return (result.StatusResponse == HttpStatusCode.OK) ? Ok(result) : StatusCode((int)result.StatusResponse, result);

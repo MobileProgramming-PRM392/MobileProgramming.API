@@ -1,4 +1,6 @@
-﻿namespace MobileProgramming.Business.Models.DTO.Order
+﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
+
+namespace MobileProgramming.Business.Models.DTO.Order
 {
     public record OrderDto(
         int OrderId,

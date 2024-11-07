@@ -141,7 +141,7 @@ public partial class SaleProductDbContext : DbContext, IUnitOfWork
 
         modelBuilder.Entity<Payment>(entity =>
         {
-            entity.HasKey(e => e.PaymentId).HasName("PK__Payments__9B556A588A70850E");
+            entity.HasKey(e => e.PaymentId).HasName("PK__Payments__9B556A58FB97C705");
 
             entity.Property(e => e.PaymentId).HasColumnName("PaymentID");
             entity.Property(e => e.Amount).HasColumnType("decimal(18, 2)");

@@ -5,11 +5,11 @@ namespace MobileProgramming.Business.UseCase.Order.Queries.QueryOrder
 {
     public class QueryOrder : IRequest<APIResponse>
     {
-        public string order_id { get; set; }
+        public string zp_trans_token { get; set; }
 
-        public QueryOrder(string order_id)
+        public QueryOrder(string zp_trans_token)
         {
-            this.order_id = order_id;
+            this.zp_trans_token = zp_trans_token;
         }
     }
 }
