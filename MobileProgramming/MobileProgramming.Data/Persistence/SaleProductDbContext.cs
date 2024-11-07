@@ -38,8 +38,9 @@ public partial class SaleProductDbContext : DbContext, IUnitOfWork
     public virtual DbSet<StoreLocation> StoreLocations { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
+    public virtual DbSet<Feedback> Feedbacks { get; set; }
 
-   
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Cart>(entity =>
@@ -209,6 +210,19 @@ public partial class SaleProductDbContext : DbContext, IUnitOfWork
             entity.Property(e => e.Role).HasMaxLength(50);
             entity.Property(e => e.Username).HasMaxLength(50);
         });
+
+        modelBuilder.Entity<Feedback>(entity =>
+        {
+            entity.HasKey(e => e.FeedbackId).HasName("PK__Feedback__6A4BEDF6365ED6F9");
+
+            entity.ToTable("Feedback");
+
+            entity.Property(e => e.FeedbackId).HasColumnName("FeedbackID");
+            entity.Property(e => e.Comment).HasColumnType("text");
+            entity.Property(e => e.CreatedAt).HasColumnType("datetime");
+            entity.Property(e => e.ProductId).HasColumnName("ProductID");
+        });
+
 
         OnModelCreatingPartial(modelBuilder);
     }

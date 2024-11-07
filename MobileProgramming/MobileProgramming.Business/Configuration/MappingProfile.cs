@@ -3,6 +3,7 @@ using MobileProgramming.Business.Models.DTO;
 using MobileProgramming.Business.Models.DTO.CartItems;
 using MobileProgramming.Business.Models.DTO.Category;
 using MobileProgramming.Business.Models.DTO.Chat;
+using MobileProgramming.Business.Models.DTO.Feedbacks;
 using MobileProgramming.Business.Models.DTO.Order;
 using MobileProgramming.Business.Models.DTO.Product;
 using MobileProgramming.Business.Models.DTO.User;
@@ -43,6 +44,10 @@ namespace MobileProgramming.Business.Configuration
             CreateMap<SendMessageDto, ChatMessage>().ReverseMap();
 
             CreateMap<Order, OrderDto>();
+
+
+            //Fêdback
+            CreateMap<Feedback, FeedbackDtoResponse>().ReverseMap();    
 
 
             
