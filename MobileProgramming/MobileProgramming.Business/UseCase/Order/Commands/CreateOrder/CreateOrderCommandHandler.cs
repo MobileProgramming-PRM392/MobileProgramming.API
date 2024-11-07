@@ -6,6 +6,7 @@ using MobileProgramming.Business.UseCase.Notification.Commands.CreateNotificatio
 using MobileProgramming.Data.Interfaces;
 using MobileProgramming.Data.Interfaces.Common;
 using Newtonsoft.Json;
+using StackExchange.Redis;
 using System.Net;
 
 namespace MobileProgramming.Business.UseCase.Order.Commands.CreateOrder
@@ -15,9 +16,11 @@ namespace MobileProgramming.Business.UseCase.Order.Commands.CreateOrder
         private readonly IOrderRepository _orderRepository;
         private readonly IUserRepository _userRepository;
         private readonly ICartItemRepository _cartItemRepository;
+        private readonly IPaymentRepository _paymentRepository;
         private readonly IZaloPayService _zaloPayService;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IHubContext<NotificationHub> _hubContext;
+        private readonly IRedisCaching _caching;
         private readonly IMediator _mediator; // Add MediatR mediator
 
         public CreateOrderCommandHandler(
@@ -26,6 +29,8 @@ namespace MobileProgramming.Business.UseCase.Order.Commands.CreateOrder
             ICartItemRepository cartItemRepository,
             IZaloPayService zaloPayService,
             IUnitOfWork unitOfWork,
+            IPaymentRepository paymentRepository,
+            IRedisCaching caching,
             IHubContext<NotificationHub> hubContext,
             IMediator mediator) // Inject MediatR mediator
         {
@@ -34,8 +39,10 @@ namespace MobileProgramming.Business.UseCase.Order.Commands.CreateOrder
             _cartItemRepository = cartItemRepository;
             _zaloPayService = zaloPayService;
             _unitOfWork = unitOfWork;
+            _caching = caching;
             _hubContext = hubContext;
-            _mediator = mediator; // Initialize
+            _mediator = mediator;
+            _paymentRepository = paymentRepository;
         }
 
         public async Task<APIResponse> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
@@ -55,7 +62,8 @@ namespace MobileProgramming.Business.UseCase.Order.Commands.CreateOrder
             string app_trans_id = DateTime.UtcNow.ToString("yyMMdd") + "_" + rnd.Next(1000000);
 
             var result = await _zaloPayService.CreateOrderAsync(request.Amount, request.Description!, app_trans_id);
-
+            var zp_trans_token = (string)result["zp_trans_token"];
+            var orderId = await _orderRepository.CountOrdersAsync() + 1;
             var order = new Data.Entities.Order
             {
                 CartId = request.CartId,
@@ -67,6 +75,19 @@ namespace MobileProgramming.Business.UseCase.Order.Commands.CreateOrder
             };
 
             await _orderRepository.Add(order);
+
+            await _unitOfWork.SaveChangesAsync();
+
+            var payment = new Data.Entities.Payment
+            {
+                PaymentId = zp_trans_token,
+                OrderId = order.OrderId, 
+                Amount = decimal.Parse(request.Amount),
+                PaymentDate = DateTime.Now,
+                PaymentStatus = "Active"
+            };
+
+            await _paymentRepository.Add(payment);
             await _unitOfWork.SaveChangesAsync();
 
             var notification = new Data.Entities.Notification
@@ -86,6 +107,12 @@ namespace MobileProgramming.Business.UseCase.Order.Commands.CreateOrder
 
             await _hubContext.Clients.User(request.UserId.ToString())
                 .SendAsync("ReceiveNotification", JsonConvert.SerializeObject(notification, Formatting.Indented));
+
+            var hashEntries = new HashEntry[]
+                           {
+                            new HashEntry("transactionId",$"{app_trans_id}")
+                           };
+            await _caching.HashSetAsync($"payment_{zp_trans_token}", hashEntries, 1000020);
 
             return new APIResponse
             {
