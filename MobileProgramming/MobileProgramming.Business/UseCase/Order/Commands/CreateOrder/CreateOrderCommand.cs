@@ -3,9 +3,15 @@ using MobileProgramming.Business.Models.Response;
 
 namespace MobileProgramming.Business.UseCase.Order.Commands.CreateOrder
 {
+    public class CartItemDto
+    {
+        public int ProductId { get; set; }
+        public int Quantity { get; set; }
+    }
+
     public class CreateOrderCommand : IRequest<APIResponse>
     {
-        public int? CartId { get; set; }
+        public List<CartItemDto> CartItems { get; set; }
 
         public int UserId { get; set; }
 
@@ -14,13 +20,13 @@ namespace MobileProgramming.Business.UseCase.Order.Commands.CreateOrder
         public string? Amount { get; set; }
         public string? Description { get; set; }
 
-        public CreateOrderCommand(int? cartId, int userId, string? billingAddress, string? amount, string? description)
+        public CreateOrderCommand(List<CartItemDto> cartItems, int userId, string? billingAddress, string? amount, string? description)
         {
-            CartId = cartId;
+            CartItems = cartItems;
             UserId = userId;
             BillingAddress = billingAddress;
             Amount = amount;
-            Description = description;  
+            Description = description;
         }
     }
 }
