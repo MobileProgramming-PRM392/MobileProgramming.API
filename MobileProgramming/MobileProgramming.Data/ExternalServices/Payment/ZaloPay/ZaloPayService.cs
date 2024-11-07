@@ -70,7 +70,7 @@ namespace MobileProgramming.Data.ExternalServices.Payment.ZaloPay
         {
             var param = new Dictionary<string, string>
                 {
-                    { "app_id", "533" },
+                    { "app_id", "553" },
                     { "app_trans_id", appTransId}
                 };
 

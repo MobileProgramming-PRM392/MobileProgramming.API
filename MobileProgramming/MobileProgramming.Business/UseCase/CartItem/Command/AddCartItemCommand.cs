@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using MobileProgramming.Business.Models.DTO.CartItems;
 using MobileProgramming.Business.Models.Response;
 using System;
 using System.Collections.Generic;
@@ -11,14 +12,13 @@ namespace MobileProgramming.Business.UseCase
     public class AddCartItemCommand : IRequest<APIResponse>
     {
         public int UserId { get; set; }
-        public List<int> ProductId { get; set; }
-        public List<int> Quantity { get; set; }
+        public List<AddCartItemRequestDto> CartItems { get; set; }
 
-        public AddCartItemCommand(int userId, List<int> productId, List<int> quantity)
+        public AddCartItemCommand(int userId, List<AddCartItemRequestDto> cartItems)
         {
             UserId = userId;
-            ProductId = productId;
-            Quantity = quantity;
+            CartItems = cartItems;
         }
     }
+
 }

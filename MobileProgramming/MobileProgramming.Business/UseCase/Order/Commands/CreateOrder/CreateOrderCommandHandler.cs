@@ -19,7 +19,7 @@ namespace MobileProgramming.Business.UseCase.Order.Commands.CreateOrder
         private readonly IPaymentRepository _paymentRepository;
         private readonly IZaloPayService _zaloPayService;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IHubContext<NotificationHub> _hubContext;
+        private readonly IHubContext<NotificationHub, INotificationClient> _hubContext;
         private readonly IRedisCaching _caching;
         private readonly IMediator _mediator; // Add MediatR mediator
 
@@ -31,7 +31,7 @@ namespace MobileProgramming.Business.UseCase.Order.Commands.CreateOrder
             IUnitOfWork unitOfWork,
             IPaymentRepository paymentRepository,
             IRedisCaching caching,
-            IHubContext<NotificationHub> hubContext,
+            IHubContext<NotificationHub, INotificationClient> hubContext,
             IMediator mediator) // Inject MediatR mediator
         {
             _orderRepository = orderRepository;
@@ -105,8 +105,7 @@ namespace MobileProgramming.Business.UseCase.Order.Commands.CreateOrder
             });
 
 
-            await _hubContext.Clients.User(request.UserId.ToString())
-                .SendAsync("ReceiveNotification", JsonConvert.SerializeObject(notification, Formatting.Indented));
+            await _hubContext.Clients.All.ReceiveNotification(JsonConvert.SerializeObject(notification, Formatting.Indented));
 
             var hashEntries = new HashEntry[]
                            {
