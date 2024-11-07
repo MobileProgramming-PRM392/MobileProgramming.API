@@ -115,6 +115,7 @@ namespace MobileProgramming.Data.Configuration
             services.AddScoped<IImageService, ImageService>();
             services.AddScoped<IZaloPayService, ZaloPayService>();
             services.AddScoped<IPaymentRepository, PaymentRepository>();
+            services.AddScoped<IFeedbackRepository, FeedbackRepository>();
             return services;
 
 
