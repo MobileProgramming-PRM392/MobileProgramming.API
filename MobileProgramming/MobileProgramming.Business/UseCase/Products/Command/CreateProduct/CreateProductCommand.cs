@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using MobileProgramming.Business.Models.DTO.Product;
 using MobileProgramming.Business.Models.Response;
+using System.ComponentModel.DataAnnotations;
 
 
 namespace MobileProgramming.Business.UseCase.Products.Command.CreateProduct;
