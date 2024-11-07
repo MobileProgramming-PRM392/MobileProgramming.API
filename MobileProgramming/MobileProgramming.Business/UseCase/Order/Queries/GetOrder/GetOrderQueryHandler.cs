@@ -17,7 +17,6 @@ namespace MobileProgramming.Business.UseCase.Order.Queries.GetOrder
             _orderRepository = orderRepository;
             _mapper = mapper;
         }
-
         public async Task<APIResponse> Handle(GetOrderQuery request, CancellationToken cancellationToken)
         {
             var orders = await _orderRepository.FilterOrders(
