@@ -22,12 +22,12 @@ namespace MobileProgramming.Data.Repository
 
         public async Task<List<Feedback>> GetFeedbackByProductId(int productId)
         {
-           return await _context.Feedbacks.Where(f => f.ProductId == productId).ToListAsync();
+           return await _context.Feedbacks.Include(c => c.User).Where(f => f.ProductId == productId).ToListAsync();
         }
 
         public async Task<Feedback> GetMyFeedbackByProductId(int productId, int userId)
         {
-            return await _context.Feedbacks.Where(f => f.ProductId == productId && f.UserId == userId).FirstOrDefaultAsync();
+            return await _context.Feedbacks.Include(c => c.User).Where(f => f.ProductId == productId && f.UserId == userId).FirstOrDefaultAsync();
         }
     }
 }

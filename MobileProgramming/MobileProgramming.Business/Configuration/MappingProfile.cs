@@ -47,7 +47,9 @@ namespace MobileProgramming.Business.Configuration
 
 
             //Fêdback
-            CreateMap<Feedback, FeedbackDtoResponse>().ReverseMap();    
+            CreateMap<Feedback, FeedbackDtoResponse>()
+                .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.User.Username))
+                .ReverseMap();    
 
 
             
