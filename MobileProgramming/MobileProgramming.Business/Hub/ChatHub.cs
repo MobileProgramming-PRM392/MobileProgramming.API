@@ -6,7 +6,7 @@ using MobileProgramming.Data.Interfaces;
 using MobileProgramming.Data.Interfaces.Common;
 using Newtonsoft.Json;
 
-namespace MobileProgramming.Business.Hub;
+namespace MobileProgramming.Business.Hubs;
 
 
 
@@ -14,7 +14,7 @@ public interface IChatHub
 {
     Task SendChatMessages(ChatDto dto);
 }
-public class ChatHub : Microsoft.AspNetCore.SignalR.Hub
+public class ChatHub : Hub
 {
     private readonly IChatMessageRepository _messageRepository;
     private readonly IUserRepository _userRepo;
@@ -28,10 +28,7 @@ public class ChatHub : Microsoft.AspNetCore.SignalR.Hub
         _mapper = mapper;
         _unitOfWork = unitOfWork;
     }
-    public override async Task OnConnectedAsync()
-    {
-        await Clients.All.SendAsync("connection check", $"connection estabished: {Context.ConnectionId}");
-    }
+    
     public async Task SendMessageChatTest(string messageDto)
     {
         //SendMessageDto  dto = JsonConvert.DeserializeObject<SendMessageDto>(messageDto);

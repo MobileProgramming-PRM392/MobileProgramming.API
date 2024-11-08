@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 
-namespace MobileProgramming.Business.Hub
+namespace MobileProgramming.Business.Hubs
 {
     public class NotificationHub : Microsoft.AspNetCore.SignalR.Hub<INotificationClient>
     {
