@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.VisualBasic;
 using MobileProgramming.Business.Models.DTO.Chat;
 using MobileProgramming.Data.Entities;
 using MobileProgramming.Data.Interfaces;
@@ -86,8 +87,9 @@ public class ChatHub : Hub
 
         if (await _unitOfWork.SaveChangesAsync() > 0)
         {
-            var sendFrom = _mapper.Map<UserInfoDto>(await _userRepo.GetById(message.UserId!));
-            var chatMessage = CreateChatDto(message, sendFrom);
+            var sender = await _userRepo.GetById(message.SendTo!);
+            var sendFrom = await _userRepo.GetById(message.UserId!);
+            var chatMessage = CreateChatDto(message, sendFrom, sender);
             await Clients.All.SendAsync("Received-message", chatMessage/*JsonConvert.SerializeObject(chatMessage)*/);
         }
     }
@@ -115,11 +117,21 @@ public class ChatHub : Hub
             Message = dto.Message
         };
     }
-    private ChatDto CreateChatDto(ChatMessage message, UserInfoDto sendFrom)
+    private ChatDto CreateChatDto(ChatMessage message, User sendFrom, User sendTo)
     {
+        string conversationId = "";
+        if(sendFrom.Role == "Admin")
+        {
+            conversationId = conversationId + $"{sendFrom.Username}-{sendTo.Username}";
+        }
+        else
+        {
+            conversationId = conversationId + $"{sendTo.Username}-{sendFrom.Username}";
+        }
+            
         return new ChatDto
         {
-            ConversationId = "",
+            ConversationId = $"conversation@{conversationId}",
             ChatMessageId = message.ChatMessageId,
             SenderId = sendFrom.UserId,
             ReceiverId = message.SendTo,
