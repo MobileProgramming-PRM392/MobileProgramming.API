@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.OpenApi.Models;
 using MobileProgramming.API;
 using MobileProgramming.Business;
-using MobileProgramming.Business.Hub;
+using MobileProgramming.Business.Hubs;
 using MobileProgramming.Data.Configuration;
 using MobileProgramming.Data.Persistence;
 using Serilog;
