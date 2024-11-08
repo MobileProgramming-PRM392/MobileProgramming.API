@@ -5,6 +5,7 @@ using System.Reflection;
 using FluentValidation;
 using Quartz;
 using MobileProgramming.Business.Quartz.PaymentScheduler;
+using Serilog;
 namespace MobileProgramming.Business
 {
     public static class DependencyInjection
@@ -18,6 +19,7 @@ namespace MobileProgramming.Business
                 cfg.AddOpenBehavior(typeof(ValidationBehaviour<,>));
             });
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
+            services.AddSingleton<ILogger>(Log.Logger);
 
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
             services.AddQuartz(q =>
@@ -33,7 +35,7 @@ namespace MobileProgramming.Business
                         .RepeatForever()
                         .Build()));
             });
-
+            services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
             return services;
         }
     }

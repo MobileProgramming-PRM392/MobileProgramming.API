@@ -87,6 +87,7 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, API
 
         var result = await _zaloPayService.CreateOrderAsync(request.Amount, request.Description!, app_trans_id);
         var zp_trans_token = (string)result["zp_trans_token"];
+        var orderUrl = (string)result["order_url"];
         var orderId = await _orderRepository.CountOrdersAsync() + 1;
         var order = new Data.Entities.Order
         {
@@ -95,7 +96,8 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, API
             BillingAddress = request.BillingAddress ?? string.Empty,
             PaymentMethod = "Credit Card",
             OrderStatus = "Pending",
-            OrderDate = DateTime.Now
+            OrderDate = DateTime.Now,
+            OrderUrl = orderUrl,
         };
 
         await _orderRepository.Add(order);

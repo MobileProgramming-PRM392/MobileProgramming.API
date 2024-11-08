@@ -13,6 +13,7 @@ public partial class Order
     public string BillingAddress { get; set; } = null!;
 
     public string OrderStatus { get; set; } = null!;
+    public string OrderUrl { get; set; } = null!;
 
     public DateTime OrderDate { get; set; }
 
