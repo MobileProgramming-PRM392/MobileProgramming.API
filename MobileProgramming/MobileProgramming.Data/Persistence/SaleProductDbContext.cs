@@ -55,6 +55,7 @@ public partial class SaleProductDbContext : DbContext, IUnitOfWork
             entity.HasOne(d => d.User).WithMany(p => p.Carts)
                 .HasForeignKey(d => d.UserId)
                 .HasConstraintName("FK__Carts__UserID__3E52440B");
+
         });
 
         modelBuilder.Entity<CartItem>(entity =>

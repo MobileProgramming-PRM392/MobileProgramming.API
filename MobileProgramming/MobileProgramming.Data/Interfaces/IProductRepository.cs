@@ -13,6 +13,7 @@ namespace MobileProgramming.Data.Interfaces
 {
     public interface IProductRepository : IRepository<Product>
     {
+        Task<decimal> GetProductPriceAsync(int productId);
         Task<List<Product>> GetFilteredProductsAsync(ProductFilterDto filter, ProductSortDto sort);
         Task<List<Product>> GetProductsToDisplay();
         Task<Product?> GetProductDetail(int productId);

@@ -1,18 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using MobileProgramming.Business.Models.DTO.Product;
 using MobileProgramming.Data.Entities;
 using MobileProgramming.Data.Generic;
 using MobileProgramming.Data.Interfaces;
-using MobileProgramming.Data.Models;
 using MobileProgramming.Data.Models.Enum;
 using MobileProgramming.Data.Models.Product;
 using MobileProgramming.Data.Persistence;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MobileProgramming.Data.Repository
 {
@@ -98,6 +91,18 @@ namespace MobileProgramming.Data.Repository
                 .OrderByDescending(g => g.cartItemsCount)
                 .Select(g => g.product);
         }
+
+
+        public async Task<decimal> GetProductPriceAsync(int productId)
+        {
+
+            return await _context.Products
+                .Where(p => p.ProductId == productId)
+                .Select(p => p.Price).FirstOrDefaultAsync();
+
+        }
+
+
 
     }
 }
