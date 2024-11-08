@@ -1,7 +1,7 @@
 ﻿
 using MediatR;
 using Microsoft.AspNetCore.SignalR;
-using MobileProgramming.Business.Hub;
+using MobileProgramming.Business.Hubs;
 using MobileProgramming.Business.Models.Response;
 using MobileProgramming.Business.UseCase.Notification.Commands.CreateNotification;
 using MobileProgramming.Data.Interfaces;
