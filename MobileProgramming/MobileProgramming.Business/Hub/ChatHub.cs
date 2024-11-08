@@ -49,8 +49,9 @@ public class ChatHub : Microsoft.AspNetCore.SignalR.Hub
             {
                 ChatMessageId = message.ChatMessageId,
                 SenderId = message.UserId.Value,
+                ReceiverId = message.SendTo,
                 Message = message.Message,
-                SentAt = message.SentAt,
+                SentAt = message.SentAt
             };
 
             await Clients.All.SendAsync("Received-message", JsonConvert.SerializeObject(chatMessage));
@@ -73,6 +74,7 @@ public class ChatHub : Microsoft.AspNetCore.SignalR.Hub
             {
                 ChatMessageId = message.ChatMessageId,
                 SenderId = message.UserId.Value,
+                ReceiverId = message.SendTo,
                 Message = message.Message,
                 SentAt = message.SentAt
             };
@@ -93,26 +95,26 @@ public class ChatHub : Microsoft.AspNetCore.SignalR.Hub
         }
     }
 
-   /* public async Task SendPrivateMessageChat(SendMessageDto dto)
-    {
-        var message = CreateChatMessage(dto);
-        await Groups.AddToGroupAsync(Context.ConnectionId, dto.RoomNo.ToString());
-        await _messageRepository.Add(message);
+    //public async Task SendPrivateMessageChat(SendMessageDto dto)
+    //{
+    //    var message = CreateChatMessage(dto);
+    //    await Groups.AddToGroupAsync(Context.ConnectionId, dto.RoomNo.ToString());
+    //    await _messageRepository.Add(message);
 
-        if (await _unitOfWork.SaveChangesAsync() > 0)
-        {
-            var sendFrom = _mapper.Map<UserInfoDto>(await _userRepo.GetById(message.UserId!));
-            var chatMessage = await CreateChatDto(message, sendFrom);
-            await Clients.Group(dto.RoomNo.ToString()).SendAsync("Received-message", chatMessage*//*JsonConvert.SerializeObject(chatMessage)*//*);
-        }
-    }*/
+    //    if (await _unitOfWork.SaveChangesAsync() > 0)
+    //    {
+    //        var sendFrom = _mapper.Map<UserInfoDto>(await _userRepo.GetById(message.UserId!));
+    //        var chatMessage = await CreateChatDto(message, sendFrom);
+    //        await Clients.Group(dto.RoomNo.ToString()).SendAsync("Received-message", chatMessage *//*JsonConvert.SerializeObject(chatMessage)*//*);
+    //    }
+    //}
 
     private ChatMessage CreateChatMessage(SendMessageDto dto)
     {
         return new ChatMessage
         {
             UserId = dto.UserId,
-            SendTo = dto.SendTo,
+            SendTo = dto.ReceiverId,
             Message = dto.Message
         };
     }
@@ -123,6 +125,7 @@ public class ChatHub : Microsoft.AspNetCore.SignalR.Hub
             ConversationId = "",
             ChatMessageId = message.ChatMessageId,
             SenderId = sendFrom.UserId,
+            ReceiverId = message.SendTo,
             Message = message.Message,
             SentAt = message.SentAt,
         };

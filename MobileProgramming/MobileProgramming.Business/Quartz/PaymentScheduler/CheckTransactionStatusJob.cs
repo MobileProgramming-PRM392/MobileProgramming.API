@@ -1,7 +1,9 @@
-﻿using MediatR;
+﻿
+using MediatR;
 using MobileProgramming.Business.UseCase.Order.Queries.QueryOrder;
 using MobileProgramming.Data.Interfaces.Common;
 using Quartz;
+using Serilog;
 
 namespace MobileProgramming.Business.Quartz.PaymentScheduler
 {
@@ -10,12 +12,14 @@ namespace MobileProgramming.Business.Quartz.PaymentScheduler
         private readonly ISchedulerFactory _scheduler;
         private readonly IMediator _mediator;
         private readonly IRedisCaching _caching;
+        private readonly ILogger _logger;
 
-        public CheckTransactionStatusJob(ISchedulerFactory scheduler, IMediator mediator, IRedisCaching caching)
+        public CheckTransactionStatusJob(ISchedulerFactory scheduler, IMediator mediator, IRedisCaching caching, ILogger logger)
         {
             _scheduler = scheduler;
             _mediator = mediator;
             _caching = caching;
+            _logger = logger;
         }
 
         public async Task Execute(IJobExecutionContext context)
@@ -52,6 +56,7 @@ namespace MobileProgramming.Business.Quartz.PaymentScheduler
 
             });
 
+            _logger.Information("Start checking transaction status job");
 
 
             await Task.WhenAll(tasks);
