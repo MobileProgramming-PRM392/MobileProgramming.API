@@ -10,6 +10,6 @@ public class SendMessageDto
 {
     public int? UserId { get; set; }
     public string? Message { get; set; }
-    public int SendTo { get; set; }
+    public int ReceiverId { get; set; }
     //public int RoomNo { get; set; }
 }

@@ -3,6 +3,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 using FluentValidation;
+using Quartz;
+using MobileProgramming.Business.Quartz.PaymentScheduler;
 namespace MobileProgramming.Business
 {
     public static class DependencyInjection
@@ -18,6 +20,19 @@ namespace MobileProgramming.Business
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+            services.AddQuartz(q =>
+            {
+                var checkJobKey = new JobKey("CheckTransactionStatusJob");
+                q.AddJob<CheckTransactionStatusJob>(opts => opts.WithIdentity(checkJobKey));
+                q.AddTrigger(opts => opts
+                    .ForJob(checkJobKey)
+                    .WithIdentity("CheckTransactionStatusTrigger")
+                    .StartNow()
+                    .WithSimpleSchedule(x => x
+                        .WithIntervalInMinutes(1)
+                        .RepeatForever()
+                        .Build()));
+            });
 
             return services;
         }

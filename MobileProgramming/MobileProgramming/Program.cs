@@ -1,4 +1,4 @@
-
+﻿
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.OpenApi.Models;
@@ -63,12 +63,12 @@ using (var scope = app.Services.CreateScope())
     var dbContext = scope.ServiceProvider.GetRequiredService<SaleProductDbContext>();
 }
 
+app.UseCors(x => x
+.AllowAnyMethod()
+.AllowAnyHeader()
+.SetIsOriginAllowed(origin => true) 
+.AllowCredentials());
 
-
-app.UseCors(app => app
-    .AllowAnyOrigin()
-        .AllowAnyMethod()
-            .AllowAnyHeader());
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
