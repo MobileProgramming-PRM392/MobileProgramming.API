@@ -25,10 +25,9 @@ namespace MobileProgramming.Business.UseCase.Order.Queries.QueryOrder
 
         public async Task<APIResponse> Handle(QueryOrder request, CancellationToken cancellationToken)
         {
-            var transactionId = await _caching.HashGetSpecificKeyAsync($"payment_{request.zp_trans_token}", "transactionId");
-            var result = await _zaloPayService.QueryOrderStatus(transactionId);
+            var result = await _zaloPayService.QueryOrderStatus(request.transactionId);
             var returncode = Convert.ToInt32(result["return_code"]);
-            var paymentexist = await _paymentRepository.GetById(request.zp_trans_token!);
+            var paymentexist = await _paymentRepository.GetById(request.transactionId!);
             var exist = await _orderRepository.GetByIdAsync((int)paymentexist.OrderId);
             if (exist == null)
             {
@@ -40,7 +39,7 @@ namespace MobileProgramming.Business.UseCase.Order.Queries.QueryOrder
                 };
             }
 
-            //switch expression
+
             exist.OrderStatus = returncode switch
             {
                 1 => "Success",
@@ -53,7 +52,7 @@ namespace MobileProgramming.Business.UseCase.Order.Queries.QueryOrder
 
             return new APIResponse
             {
-                StatusResponse = System.Net.HttpStatusCode.NotFound,
+                StatusResponse = System.Net.HttpStatusCode.OK,
                 Message = "Successfully",
                 Data = result,
             };

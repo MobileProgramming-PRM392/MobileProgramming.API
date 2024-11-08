@@ -7,6 +7,7 @@ using MobileProgramming.Business.UseCase.Notification.Commands.CreateNotificatio
 using MobileProgramming.Data.Interfaces;
 using MobileProgramming.Data.Interfaces.Common;
 using Newtonsoft.Json;
+using StackExchange.Redis;
 using System.Net;
 
 namespace MobileProgramming.Business.UseCase.Order.Commands.CreateOrder;
@@ -82,6 +83,7 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, API
 
         Random rnd = new Random();
         string app_trans_id = DateTime.UtcNow.ToString("yyMMdd") + "_" + rnd.Next(1000000);
+        string cacheKey = $"payment_pending_{app_trans_id}";
 
         var result = await _zaloPayService.CreateOrderAsync(request.Amount, request.Description!, app_trans_id);
         var zp_trans_token = (string)result["zp_trans_token"];
@@ -102,7 +104,7 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, API
         // Tạo payment cho order
         var payment = new Data.Entities.Payment
         {
-            PaymentId = Guid.NewGuid().ToString(),
+            PaymentId = app_trans_id,
             OrderId = order.OrderId,
             Amount = decimal.Parse(request.Amount),
             PaymentDate = DateTime.Now,
@@ -112,7 +114,13 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, API
         await _paymentRepository.Add(payment);
         await _unitOfWork.SaveChangesAsync();
 
-        // Gửi thông báo cho người dùng
+        var hashEntries = new HashEntry[]
+                            {
+                            new HashEntry("transactionId",$"{app_trans_id}"),
+                            };
+        await _caching.HashSetAsync(cacheKey, hashEntries, 120);
+
+
         var notificationResponse = await _mediator.Send(new CreateNotification
         {
             UserId = request.UserId,
