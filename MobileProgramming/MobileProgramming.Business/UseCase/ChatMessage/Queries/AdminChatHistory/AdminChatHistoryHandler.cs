@@ -36,13 +36,23 @@ public class AdminChatHistoryHandler : IRequestHandler<AdminChatHistoryCommand, 
             {
                 ConversationDto temp = new ConversationDto();
                 ChatMessage message = chatMessage.FirstOrDefault()!;
-                UserInfoDto participant = _mapper.Map<UserInfoDto>(await _userRepo.GetById(message.UserId!));
-                UserInfoDto participant2 = _mapper.Map<UserInfoDto>(await _userRepo.GetById(message.SendTo!));
+                User? user = await _userRepo.GetById(message.UserId!);
+                User? user2 = await _userRepo.GetById(message.SendTo!);
+                UserInfoDto participant = _mapper.Map<UserInfoDto>(user);
+                UserInfoDto participant2 = _mapper.Map<UserInfoDto>(user2);
                 
                 temp.Participants.Add(participant);
                 temp.Participants.Add(participant2);
-                string conversationId = $"conversation@{participant.Username}-{participant2.Username}";
-                temp.ConversationId = conversationId;
+                string conversationId = "";
+                if (user!.Role == "Admin")
+                {
+                    conversationId = conversationId + $"{participant.Username}-{participant2.Username}";
+                }
+                else
+                {
+                    conversationId = conversationId + $"{participant2.Username}-{participant.Username}";
+                }
+                temp.ConversationId = $"conversation@{conversationId}";
                 temp.Chats = toDto(chatMessage, conversationId);
                 temp.LastMessageTimestamp = temp.Chats.FirstOrDefault()!.SentAt;
                 response.Add(temp);
