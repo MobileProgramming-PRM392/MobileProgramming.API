@@ -35,7 +35,7 @@ namespace MobileProgramming.API.Controllers
             var userIdString = User.GetUserIdFromToken();
             if (!int.TryParse(userIdString, out var userId))
             {
-                return BadRequest("Invalid user ID."); // Trả về lỗi nếu không thể chuyển đổi
+                return BadRequest("Invalid user ID."); 
             }
 
             var result = await _mediator.Send(new AddCartItemCommand(userId, request), cancellationToken);
