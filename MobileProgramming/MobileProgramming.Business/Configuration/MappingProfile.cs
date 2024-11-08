@@ -70,6 +70,7 @@ namespace MobileProgramming.Business.Configuration
                 .ForMember(dest => dest.PaymentMethod, opt => opt.MapFrom(src => src.Order.PaymentMethod))
                 .ForMember(dest => dest.BillingAddress, opt => opt.MapFrom(src => src.Order.BillingAddress))
                 .ForMember(dest => dest.OrderStatus, opt => opt.MapFrom(src => src.Order.OrderStatus))
+                .ForMember(dest => dest.OrderUrl, opt => opt.MapFrom(src => src.Order.OrderUrl))
                 .ForMember(dest => dest.OrderDate, opt => opt.MapFrom(src => src.Order.OrderDate))
                 .ForMember(dest => dest.Cart, opt => opt.MapFrom(src => src.Order.Cart));
         }

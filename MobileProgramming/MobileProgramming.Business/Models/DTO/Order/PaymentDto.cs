@@ -7,6 +7,7 @@
         public int OrderId { get; set; }
         public int? CartId { get; set; }
         public int? UserId { get; set; }
+        public string? OrderUrl { get; set; }
         public string PaymentMethod { get; set; } = string.Empty;
         public string BillingAddress { get; set; } = string.Empty;
         public string OrderStatus { get; set; } = string.Empty;

@@ -9,6 +9,7 @@ namespace MobileProgramming.Business.Models.DTO.Order
         string PaymentMethod,
         string BillingAddress,
         string OrderStatus,
+        string OrderUrl,
         DateTime OrderDate,
         CartOrderDto? Cart
     );
