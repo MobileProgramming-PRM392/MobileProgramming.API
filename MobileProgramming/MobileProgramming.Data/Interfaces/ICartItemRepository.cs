@@ -8,5 +8,6 @@ namespace MobileProgramming.Data.Interfaces
     {
         Task<CartItem?> GetCartItemAsync(int cartId, int productId);
         Task<int?> GetCartIdByUserIdAndProducts(int userId, List<int> productIds, List<int> quantities);
+        Task DeleteCartItemByCartId(int cartId);
     }
 }

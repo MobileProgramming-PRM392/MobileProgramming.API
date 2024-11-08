@@ -54,6 +54,17 @@ namespace MobileProgramming.Data.Repository
             // Trả về cartId nếu tất cả các điều kiện thỏa mãn
             return cart.CartId;
         }
-        
+
+        public async Task DeleteCartItemByCartId(int cartId)
+        {
+            var cartItems = await _context.Set<CartItem>()
+                                    .Where(ci => ci.CartId == cartId)
+                                    .ToListAsync();
+
+            foreach (var cartItem in cartItems)
+            {
+                _context.Set<CartItem>().Remove(cartItem);
+            }
+        }
     }
 }

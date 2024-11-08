@@ -34,7 +34,9 @@ namespace MobileProgramming.Business.UseCase
 
             if (cart != null)
             {
+                await _cartItemRepository.DeleteCartItemByCartId(cart.CartId);
                 await _cartRepository.Delete(cart.CartId);
+                
                 await _unitOfWork.SaveChangesAsync();
             }
 
@@ -122,7 +124,12 @@ namespace MobileProgramming.Business.UseCase
             //var finalCartItem = _mapper.Map<CartItemDto>(cartItem);
             response.StatusResponse = HttpStatusCode.OK;
             response.Message = MessageCommon.SavingSuccesfully;
-            response.Data = request;
+            response.Data = new AddCartItemResponseDto
+            {
+                UserId = request.UserId,
+                CartItems = request.CartItems,
+                CartId = existedCart.CartId
+            };
 
             return response;
         }
