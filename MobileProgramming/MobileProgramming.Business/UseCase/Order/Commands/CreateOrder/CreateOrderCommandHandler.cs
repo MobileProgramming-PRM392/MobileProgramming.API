@@ -4,8 +4,10 @@ using Microsoft.AspNetCore.SignalR;
 using MobileProgramming.Business.Hubs;
 using MobileProgramming.Business.Models.Response;
 using MobileProgramming.Business.UseCase.Notification.Commands.CreateNotification;
+using MobileProgramming.Data.Entities;
 using MobileProgramming.Data.Interfaces;
 using MobileProgramming.Data.Interfaces.Common;
+using MobileProgramming.Data.Repository;
 using Newtonsoft.Json;
 using StackExchange.Redis;
 using System.Net;
@@ -16,8 +18,10 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, API
     private readonly IOrderRepository _orderRepository;
     private readonly IUserRepository _userRepository;
     private readonly ICartItemRepository _cartItemRepository;
+    private readonly ICartRepository _cartRepository;
     private readonly IPaymentRepository _paymentRepository;
     private readonly IZaloPayService _zaloPayService;
+    private readonly IProductRepository _productRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IHubContext<NotificationHub, INotificationClient> _hubContext;
     private readonly IRedisCaching _caching;
@@ -27,9 +31,11 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, API
         IOrderRepository orderRepository,
         IUserRepository userRepository,
         ICartItemRepository cartItemRepository,
+        ICartRepository cartRepository,
         IZaloPayService zaloPayService,
         IUnitOfWork unitOfWork,
         IPaymentRepository paymentRepository,
+        IProductRepository productRepository,
         IRedisCaching caching,
         IHubContext<NotificationHub, INotificationClient> hubContext,
         IMediator mediator) // Inject MediatR mediator
@@ -37,6 +43,7 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, API
         _orderRepository = orderRepository;
         _userRepository = userRepository;
         _cartItemRepository = cartItemRepository;
+        _cartRepository = cartRepository;
         _zaloPayService = zaloPayService;
         _unitOfWork = unitOfWork;
         _caching = caching;
@@ -66,20 +73,46 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, API
             };
         }
 
-        var productIds = request.CartItems.Select(ci => ci.ProductId).ToList();
-        var quantities = request.CartItems.Select(ci => ci.Quantity).ToList();
+        //Dictionary<int, decimal> productPrices = new Dictionary<int, decimal>();
 
-        // Kiểm tra cartId dựa trên userId và các sản phẩm
-        var cartId = await _cartItemRepository.GetCartIdByUserIdAndProducts(request.UserId, productIds, quantities);
+        //foreach (var cartItem in request.CartItems)
+        //{
+        //    var price = await _productRepository.GetProductPriceAsync(cartItem.ProductId);
 
-        if (cartId == null)
+        //    productPrices[cartItem.ProductId] = price;
+            
+        //}
+
+        //var totalPrice = request.CartItems.Sum(ci => productPrices[ci.ProductId] * ci.Quantity);
+        var newCart = new Cart
         {
-            return new APIResponse
+            UserId = request.UserId,
+            TotalPrice = 0,
+            Status = "unactive"
+        };
+
+        await _cartRepository.Add(newCart);
+        await _unitOfWork.SaveChangesAsync();
+
+        
+        foreach (var cartItem in request.CartItems)
+        {
+            //var price = await _productRepository.GetProductPriceAsync(cartItem.ProductId);
+
+            var newCartItem = new Data.Entities.CartItem
             {
-                StatusResponse = HttpStatusCode.BadRequest,
-                Message = "Cart not found or cart items don't match."
+                CartId = newCart.CartId,
+                ProductId = cartItem.ProductId,
+                Quantity = cartItem.Quantity,
+                Price = 0
             };
+
+            await _cartItemRepository.Add(newCartItem);
         }
+
+        await _unitOfWork.SaveChangesAsync(); 
+        var cartId = newCart.CartId;
+
 
         Random rnd = new Random();
         string app_trans_id = DateTime.UtcNow.ToString("yyMMdd") + "_" + rnd.Next(1000000);
@@ -87,15 +120,17 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, API
 
         var result = await _zaloPayService.CreateOrderAsync(request.Amount, request.Description!, app_trans_id);
         var zp_trans_token = (string)result["zp_trans_token"];
+        var orderUrl = (string)result["order_url"];
         var orderId = await _orderRepository.CountOrdersAsync() + 1;
         var order = new Data.Entities.Order
         {
-            CartId = cartId.Value, // Sử dụng cartId lấy được
+            CartId = cartId, 
             UserId = request.UserId,
             BillingAddress = request.BillingAddress ?? string.Empty,
             PaymentMethod = "Credit Card",
             OrderStatus = "Pending",
-            OrderDate = DateTime.Now
+            OrderDate = DateTime.Now,
+            OrderUrl = orderUrl,
         };
 
         await _orderRepository.Add(order);

@@ -3,6 +3,7 @@ using MediatR;
 using MobileProgramming.Business.Models.DTO.Order;
 using MobileProgramming.Business.Models.Response;
 using MobileProgramming.Data.Interfaces;
+using Serilog;
 using System.Net;
 
 namespace MobileProgramming.Business.UseCase.Payment.Query.GetFilterPayment
@@ -11,11 +12,13 @@ namespace MobileProgramming.Business.UseCase.Payment.Query.GetFilterPayment
     {
         private readonly IPaymentRepository _paymentRepository;
         private readonly IMapper _mapper;
+        private readonly ILogger _logger;
 
-        public GetFilterPaymentHandler(IPaymentRepository paymentRepository, IMapper mapper)
+        public GetFilterPaymentHandler(IPaymentRepository paymentRepository, IMapper mapper, ILogger logger)
         {
             _paymentRepository = paymentRepository;
             _mapper = mapper;
+            _logger = logger;
         }
 
         public async Task<APIResponse> Handle(GetFilterPaymentQuery request, CancellationToken cancellationToken)
@@ -24,6 +27,8 @@ namespace MobileProgramming.Business.UseCase.Payment.Query.GetFilterPayment
                 request.PaymentId,
                 request.OrderId
             );
+
+            _logger.Information("test logging");
 
             var orderDtos = _mapper.Map<List<PaymentDto>>(payments);
 
