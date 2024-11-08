@@ -52,7 +52,7 @@ public class AdminChatHistoryHandler : IRequestHandler<AdminChatHistoryCommand, 
                 {
                     conversationId = conversationId + $"{participant2.Username}-{participant.Username}";
                 }
-                temp.ConversationId = conversationId;
+                temp.ConversationId = $"conversation@{conversationId}";
                 temp.Chats = toDto(chatMessage, conversationId);
                 temp.LastMessageTimestamp = temp.Chats.FirstOrDefault()!.SentAt;
                 response.Add(temp);
