@@ -31,7 +31,7 @@ namespace MobileProgramming.Business
                     .WithIdentity("CheckTransactionStatusTrigger")
                     .StartNow()
                     .WithSimpleSchedule(x => x
-                        .WithIntervalInMinutes(1)
+                        .WithIntervalInSeconds(25)
                         .RepeatForever()
                         .Build()));
             });
