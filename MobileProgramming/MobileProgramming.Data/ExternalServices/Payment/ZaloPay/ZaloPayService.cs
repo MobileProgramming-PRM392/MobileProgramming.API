@@ -37,7 +37,7 @@ namespace MobileProgramming.Data.ExternalServices.Payment.ZaloPay
             param.Add("embed_data", JsonConvert.SerializeObject(embed_data));
             param.Add("item", JsonConvert.SerializeObject(items));
             param.Add("description", description + app_trans_id);
-            param.Add("bank_code", "zalopayapp");
+            param.Add("bank_code", "");
 
             var data = _zaloPaySettings.Appid + "|" + param["app_trans_id"] + "|" + param["app_user"] + "|" + param["amount"] + "|"
                         + param["app_time"] + "|" + param["embed_data"] + "|" + param["item"];
