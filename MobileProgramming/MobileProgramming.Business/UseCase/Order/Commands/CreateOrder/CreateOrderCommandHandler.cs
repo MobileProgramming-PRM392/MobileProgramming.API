@@ -27,29 +27,19 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, API
     private readonly IRedisCaching _caching;
     private readonly IMediator _mediator; // Add MediatR mediator
 
-    public CreateOrderCommandHandler(
-        IOrderRepository orderRepository,
-        IUserRepository userRepository,
-        ICartItemRepository cartItemRepository,
-        ICartRepository cartRepository,
-        IZaloPayService zaloPayService,
-        IUnitOfWork unitOfWork,
-        IPaymentRepository paymentRepository,
-        IProductRepository productRepository,
-        IRedisCaching caching,
-        IHubContext<NotificationHub, INotificationClient> hubContext,
-        IMediator mediator) // Inject MediatR mediator
+    public CreateOrderCommandHandler(IOrderRepository orderRepository, IUserRepository userRepository, ICartItemRepository cartItemRepository, ICartRepository cartRepository, IPaymentRepository paymentRepository, IZaloPayService zaloPayService, IProductRepository productRepository, IUnitOfWork unitOfWork, IHubContext<NotificationHub, INotificationClient> hubContext, IRedisCaching caching, IMediator mediator)
     {
         _orderRepository = orderRepository;
         _userRepository = userRepository;
         _cartItemRepository = cartItemRepository;
         _cartRepository = cartRepository;
-        _zaloPayService = zaloPayService;
-        _unitOfWork = unitOfWork;
-        _caching = caching;
-        _hubContext = hubContext;
-        _mediator = mediator;
         _paymentRepository = paymentRepository;
+        _zaloPayService = zaloPayService;
+        _productRepository = productRepository;
+        _unitOfWork = unitOfWork;
+        _hubContext = hubContext;
+        _caching = caching;
+        _mediator = mediator;
     }
 
     public async Task<APIResponse> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
@@ -73,21 +63,20 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, API
             };
         }
 
-        //Dictionary<int, decimal> productPrices = new Dictionary<int, decimal>();
+       
+        decimal totalPrice = 0;
+        foreach (var cartItem in request.CartItems)
+        {
+            var product = await _productRepository.GetById(cartItem.ProductId);
 
-        //foreach (var cartItem in request.CartItems)
-        //{
-        //    var price = await _productRepository.GetProductPriceAsync(cartItem.ProductId);
+            totalPrice += product.Price * cartItem.Quantity;
 
-        //    productPrices[cartItem.ProductId] = price;
-            
-        //}
+        }
 
-        //var totalPrice = request.CartItems.Sum(ci => productPrices[ci.ProductId] * ci.Quantity);
         var newCart = new Cart
         {
             UserId = request.UserId,
-            TotalPrice = 0,
+            TotalPrice = totalPrice,
             Status = "unactive"
         };
 
@@ -97,14 +86,14 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, API
         
         foreach (var cartItem in request.CartItems)
         {
-            //var price = await _productRepository.GetProductPriceAsync(cartItem.ProductId);
+            var product = await _productRepository.GetById(cartItem.ProductId);
 
             var newCartItem = new Data.Entities.CartItem
             {
                 CartId = newCart.CartId,
                 ProductId = cartItem.ProductId,
                 Quantity = cartItem.Quantity,
-                Price = 0
+                Price = product.Price
             };
 
             await _cartItemRepository.Add(newCartItem);
