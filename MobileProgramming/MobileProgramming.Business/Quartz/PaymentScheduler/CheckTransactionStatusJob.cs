@@ -51,7 +51,13 @@ namespace MobileProgramming.Business.Quartz.PaymentScheduler
                 {
                     return;
                 }
-                await _caching.DeleteKeyAsync($"payment_pending_{app_trans_id}");
+
+                //var data = queryOrder.Data;
+                //var returnCode = Convert.ToInt32(data["return_code"]);
+                //if (orderStatus == "1" || orderStatus == "2") // Success or Fail
+                //{
+                //    await _caching.DeleteKeyAsync(key); // Xóa cache nếu giao dịch kết thúc
+                //}
 
 
             });
